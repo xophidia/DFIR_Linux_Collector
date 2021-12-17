@@ -10,8 +10,12 @@ Stand-alone collecting tools for Gnu/Linux
 
 ## Compatibility
 
-- Ubuntu > 16.04  :heavy_check_mark:
-- Debian > 8  :heavy_check_mark:
+:radio_button: Generic
+
+| Distribution | Version | ok | no tested | error | Comments |
+| --- | --- | --- | --- | --- |
+| Ubuntu | 16/18/19/20 |  :heavy_check_mark: | --- | --- | --- |
+
 
 ## Quick start 
 
