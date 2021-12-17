@@ -11,7 +11,6 @@ Stand-alone collecting tools for Gnu/Linux
 ## Compatibility
 
 
-:radio_button: Generic
 
 | Distribution | Version | Ok | Error | Comments | 
 | --- | --- | --- | --- | ---| 
