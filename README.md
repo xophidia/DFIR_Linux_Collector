@@ -3,18 +3,23 @@
 Stand-alone collecting tools for Gnu/Linux
 - Very low impact on the host
 - No use of host binaries (anti hooking)
-  - all binaries are in the executable
+  - all binaries are included in the executable
 - Export in json format (log) / raw (dump ram) and Text format
 - Dump ram with avml (ref to compatilibilty https://github.com/microsoft/avml#tested-distributions)
 - The result is an compressed archive
 
 ## Compatibility
 
+
 :radio_button: Generic
 
-| Distribution | Version | ok | no tested | error | Comments |
-| --- | --- | --- | --- | --- |
-| Ubuntu | 16/18/19/20 |  :heavy_check_mark: | --- | --- | --- |
+| Distribution | Version | Ok | Error | Comments | 
+| --- | --- | --- | --- | ---| 
+| Ubuntu | 16 - 20 | :heavy_check_mark: |  --- | --- |
+| Debian | > 8 | :heavy_check_mark: |  --- | --- |
+| Fedora | 30| :heavy_check_mark: |  --- | --- |
+
+The other distributions are not yet tested, still in progress ...
 
 
 ## Quick start 
@@ -89,20 +94,6 @@ Uncompressing orc  100%
     +  installer debug ..........[success]
     +  installer syslog .........[success]
 
-```
-
-### Exploitation
-
-#### Splunk (docker + docker-compose)
-```
-sudo apt install docker.io -y
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-```
-#### Start splunk
-```
-docker pull splunk/splunk
-docker run -d -p 8000:8000 -e "SPLUNK_START_ARGS=--accept-license" -e "SPLUNK_PASSWORD=<password>" --name splunk splunk/splunk:latest
 ```
 
 ### Artifacts
@@ -197,9 +188,9 @@ docker run -d -p 8000:8000 -e "SPLUNK_START_ARGS=--accept-license" -e "SPLUNK_PA
 
 ## License
 
-```
-    All the code of the project is licensed under the GNU Lesser General Public License
-```
+
+All the code of the project is licensed under the GNU Lesser General Public License
+
 
 ## Contributors 
 
