@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+SUT=$(realpath $(dirname $0)/../makeself.sh)
+SOURCE=$(realpath ..)
+GPG_SECRET_KEY="secret_key.gpg"
+GPG_KEY_ID="64F66800CCC556CB7E8FE108EE8CE9E55B602BD9"
+BAD_GPG_KEY_ID="64F66800CCC556CB7E8FE108EE8CE9E55B602BD8"
+GPG_KEY_PASSPHRASE="123123"
+ARCHIVE="makeself-test.run"
+################################################################################
+
+setupGPGKey() 
+{
+  echo $GPG_KEY_PASSPHRASE | gpg --batch --yes --passphrase-fd 0 --import $GPG_SECRET_KEY
+}
+
+deleteGPGKey() 
+{
+  gpg --batch --yes --delete-secret-keys $GPG_KEY_ID
+}
+
+testCreateSingedArchive() 
+{
+  setupGPGKey
+  mkdir archive
+  touch archive/file
+  output=$($SUT --sign "$GPG_KEY_PASSPHRASE" archive $ARCHIVE "Test" id)
+  assertReturn $? 0
+  assertEqual "$(echo $output | grep -c Signature:)" "1"
+}
+
+testVerifySingedArchive()
+{
+  ./$ARCHIVE --verify-sig $GPG_KEY_ID
+  assertReturn $? 0
+  ./$ARCHIVE --verify-sig $BAD_GPG_KEY_ID
+  assertReturn $? 2
+  deleteGPGKey
+  rm -rf archive $ARCHIVE
+}
+
+################################################################################
+
+source bashunit/bashunit.bash
