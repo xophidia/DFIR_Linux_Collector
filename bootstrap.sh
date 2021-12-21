@@ -4,7 +4,7 @@ export PATH=$PWD/bin:$PWD/sbin:$PWD/usr/bin:$PWD/usr/sbin
 export -n LD_LIBRARY_PATH
 export OUTPUT="output"
 
-echo "Prepare environment ..."
+echo "Preparing environment ..."
 # Changement path du linker pour les binaires liés dynamiquement (ex: python3)
 # https://www.it-swarm-fr.com/fr/linux/plusieurs-bibliotheques-glibc-sur-un-seul-hote/957545379/
 #patcher également toutes les commandes utilisée (anti RK)
