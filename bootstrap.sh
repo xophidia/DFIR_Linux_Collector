@@ -4,6 +4,8 @@ export PATH=$PWD/bin:$PWD/sbin:$PWD/usr/bin:$PWD/usr/sbin
 export -n LD_LIBRARY_PATH
 export OUTPUT="output"
 
+start=`date +%s`
+
 echo "Preparing environment ..."
 # Changement path du linker pour les binaires liés dynamiquement (ex: python3)
 # https://www.it-swarm-fr.com/fr/linux/plusieurs-bibliotheques-glibc-sur-un-seul-hote/957545379/
@@ -34,9 +36,14 @@ else
 fi
 
 
-
+echo ""
 echo "Archive creation ..."
 
 tar -czvf $USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`.tgz output/
 
-echo "End of script."
+end=`date +%s`
+runtime=$((end-start))
+echo ""
+echo "##################################"
+echo "Collect completed in $((runtime / 60))min $((runtime % 60))sec"
+echo "##################################"
