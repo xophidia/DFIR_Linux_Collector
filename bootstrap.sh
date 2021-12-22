@@ -20,6 +20,8 @@ chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /usr/
 chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /usr/bin/jq 2>/dev/null
 chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /usr/bin/sed 2>/dev/null
 chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /usr/bin/tput 2>/dev/null
+chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /sbin/arp 2>/dev/null
+chroot ./ /usr/bin/patchelf --set-interpreter $PWD/lib/ld-musl-x86_64.so.1 /bin/netstat 2>/dev/null
 mkdir output
 
 
