@@ -1,4 +1,4 @@
-MAIN_PACKAGES=bash libgcc libstdc++ lsof musl iptables findutils audit-libs linux-pam sudo libcrypto1.1 libmagic musl openssl-dev libmagic pkgconf jq gawk ncurses
+MAIN_PACKAGES=bash libgcc libstdc++ lsof musl iptables findutils audit-libs linux-pam sudo libcrypto1.1 libmagic musl openssl-dev libmagic pkgconf jq gawk ncurses net-tools
 COMMUNITY_PACKAGES=patchelf 
 ALPINE_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10
 APK=http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/apk-tools-static-2.10.8-r0.apk 
