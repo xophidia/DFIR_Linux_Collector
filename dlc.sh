@@ -2,7 +2,8 @@
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
 list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus )
-log_fedora=(log xlog program storage yum syslog) 
+#list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile )
+log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
 
@@ -157,9 +158,9 @@ echo "
 	       printf "   ${rouge} + ${normal} RedHat-like artifacts \n"
                for el in ${log_fedora[@]}
                do
-                   test -f /var/log/anaconda.$el
+                   test -f /var/log/anaconda/$el
                    if [[ $? -eq 0 ]]; then
-			   more /var/log/anaconda.$el > $OUTPUT/fedora_installer_anaconda.$el
+			   more /var/log/anaconda/$el > $OUTPUT/fedora_installer_anaconda.$el
                    
                    fi
                done
@@ -253,18 +254,21 @@ function generic()
 
 function antivirus()
 {
-    echo "
+    test -f /var/log/syslog
+    if [[ $? -eq 0 ]]; then
+    	echo "
 
-    Dump antivirus artifacts"
+    	Dump antivirus artifacts"
     
-    # CLamAV
+    	# CLamAV
 
-    clamav_version=$(cat /var/log/syslog | grep freshclam | grep "Local version" | awk -F: '{print $7}' | cut -d " " -f2 | tail -1)
-    update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
-    sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
+    	clamav_version=$(cat /var/log/syslog | grep freshclam | grep "Local version" | awk -F: '{print $7}' | cut -d " " -f2 | tail -1)
+   	 update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
+   	 sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
 
-    echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
-    verif $? "ClamAV"
+   	 echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
+   	 verif $? "ClamAV"
+    fi
 }
 
 
@@ -321,12 +325,38 @@ function dump_ram()
 }
 
 
+
 banner
 
 read -p "    Case Number : " caseNumber
+while [ -z $caseNumber ] 
+do
+    echo "${rouge}You must enter a case number${normal}"
+    read -p "    Case Number : " caseNumber
+done
+
 read -p "    Description : " desc
+while [ -z $desc ] 
+do
+    echo "${rouge}You must enter a description${normal}"
+read -p "    Description : " desc
+done
+
+
 read -p "    Examiner Name : " user
+while [ -z $user ] 
+do
+    echo "${rouge}You must enter an Examiner Name${normal}"
+read -p "    Examiner Name : " user
+done
+
+
 read -p "    Hostname : " host
+while [ -z $host ] 
+do
+    echo "${rouge}You must enter a HostName${normal}"
+read -p "    Hostname : " host
+done
 
 # pour les scripts externes
 
@@ -334,6 +364,8 @@ export user=$user
 export host=$host
 export desc=$desc
 export caseNumber=$caseNumber
+
+
 
 
 for method in ${list_method[@]}
