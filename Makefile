@@ -26,4 +26,4 @@ package:
 	makeself-2.4.5/makeself.sh ./alpine DFIR_linux_collector dlc ./bootstrap.sh
 
 clean:
-	rm -rf alpine DFIR_linux_collector
+	rm -rf alpine DFIR_linux_collector output DLC_Collect*
