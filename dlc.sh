@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
-list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus )
-#list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile )
+#list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus )
+list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile )
 log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
@@ -70,6 +70,18 @@ echo "
 printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
     
 
+#HASHS MD5
+
+#outputpath="$OUTPUT/Hashes/"
+#outfile="$outputpath/hashesMD5.json"
+#mkdir $outputpath
+#find / -type f -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; > $outputpath/hashesMD5
+#find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" -o -path "/run/*" \) -exec md5sum {} \; > $outputpath/hashesMD5
+#cat $outputpath/hashesMD5 | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
+#tmp=$(sed '$ s/.$//' $outfile)
+#echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+#verif $? "Hashs MD5"
+
 outfile=$OUTPUT/interest_file.json
 echo "{\"interest_files\": {" >> $outfile
 action=('-o=s' '-u=s' '-g=s')
@@ -85,19 +97,6 @@ finaltmp=$(sed '$ s/.$//' $outfile)
 echo "$finaltmp, \"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}}" > $outfile
 verif $? "interestFile"
     
-
-#HASHS MD5
-
-outputpath="$OUTPUT/Hashes/"
-outfile="$outputpath/hashesMD5.json"
-
-
-mkdir $outputpath
-find / -executable -type f ! -path "/proc/*" -exec md5sum {} > $outputpath/hashesMD5 \; 2>/dev/null
-cat $outputpath/hashesMD5 | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
-tmp=$(sed '$ s/.$//' $outfile)
-echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
-verif $? "Hashs MD5"
 
 }
 
