@@ -14,7 +14,7 @@ Stand-alone collecting tools for Gnu/Linux
 
 | Distribution | Version | Ok | Error | Comments | 
 | --- | --- | --- | --- | ---| 
-| Ubuntu | 16 - 20 | :heavy_check_mark: |  --- | --- |
+| Ubuntu | 12 - 20 | :heavy_check_mark: |  --- | --- |
 | Debian | > 8 | :heavy_check_mark: |  --- | --- |
 | Fedora | 30| :heavy_check_mark: |  --- | --- |
 
