@@ -149,7 +149,7 @@ echo "
 	       verif $? "installer syslog"
     	       more /var/log/auth.log > $OUTPUT/gen_auth
                verif $? "auth"
-    	       cat /var/log/syslog | sed s/"\""/"'"/g | sed s/"\t"//g | awk 'BEGIN{print "{ \"syslog\" : ["}  {print "{\"data\": \"",$0,"\"},"} END{print "]}"}  ENDFILE{print "{\"data\": \"",$0,"\"}"}'| jq 'del(.auth[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_syslog.json
+    	       more /var/log/syslog | sed 's/\\/\\\\/g' | sed s/"\""/"'"/g | sed s/"\t"//g | awk 'BEGIN{print "{ \"syslog\" : ["}  {print "{\"data\": \"",$0,"\"},"} END{print "]}"}  ENDFILE{print "{\"data\": \"",$0,"\"}"}'| jq 'del(.auth[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_syslog.json
                verif $? "syslog"
                ;;
       
