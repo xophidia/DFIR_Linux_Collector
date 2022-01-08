@@ -82,7 +82,7 @@ printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
 #echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
 #verif $? "Hashs MD5"
 
-outfile=$OUTPUT/interest_file.json
+outfile=$OUTPUT/interest_files.json
 echo "{\"interest_files\": {" >> $outfile
 action=('-o=s' '-u=s' '-g=s')
    for act in ${action[@]}
