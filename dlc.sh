@@ -2,7 +2,7 @@
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
 #list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus )
-list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile )
+list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
@@ -143,12 +143,22 @@ echo "
 
        "lsb" | "debian")
                printf "   ${rouge} + ${normal} Debian-like artifacts \n"
-               more /var/log/installer/debug > $OUTPUT/$distri_id"installer_debug.txt"
-	       verif $? "installer debug"
-               more /var/log/installer/syslog > $OUTPUT/$distri_id"installer_syslog.txt"
-	       verif $? "installer syslog"
-    	       more /var/log/auth.log > $OUTPUT/gen_auth
-               verif $? "auth"
+               test -f /var/log/installer/debug
+	       if [[ $? -eq 0 ]]; then
+	           more /var/log/installer/debug > $OUTPUT/$distri_id"installer_debug.txt"
+	           verif $? "installer debug"
+	       fi
+	       test -f /var/log/installer/syslog
+               if [[ $? -eq 0 ]]; then
+		   more /var/log/installer/syslog > $OUTPUT/$distri_id"installer_syslog.txt"
+	           verif $? "installer syslog"
+	       fi
+	       test -f /var/log/auth.log
+               if [[ $? -eq 0 ]]; then
+    	           more /var/log/auth.log > $OUTPUT/gen_auth
+                   verif $? "auth"
+	       fi
+
     	       more /var/log/syslog | sed 's/\\/\\\\/g' | sed s/"\""/"'"/g | sed s/"\t"//g | awk 'BEGIN{print "{ \"syslog\" : ["}  {print "{\"data\": \"",$0,"\"},"} END{print "]}"}  ENDFILE{print "{\"data\": \"",$0,"\"}"}'| jq 'del(.auth[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_syslog.json
                verif $? "syslog"
                ;;
