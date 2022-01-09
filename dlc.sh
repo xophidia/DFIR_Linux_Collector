@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
-#list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus )
 list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
@@ -72,15 +71,14 @@ printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
 
 #HASHS MD5
 
-#outputpath="$OUTPUT/Hashes/"
-#outfile="$outputpath/hashesMD5.json"
-#mkdir $outputpath
-#find / -type f -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; > $outputpath/hashesMD5
-#find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" -o -path "/run/*" \) -exec md5sum {} \; > $outputpath/hashesMD5
-#cat $outputpath/hashesMD5 | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
-#tmp=$(sed '$ s/.$//' $outfile)
-#echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
-#verif $? "Hashs MD5"
+outputpath="$OUTPUT/Hashes/"
+outfile="$outputpath/MD5_hashes.json"
+mkdir $outputpath
+find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
+cat $outputpath/MD5_hashes | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
+tmp=$(sed '$ s/.$//' $outfile)
+echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+verif $? "MD5 Hashes (executable files)"
 
 outfile=$OUTPUT/interest_files.json
 echo "{\"interest_files\": {" >> $outfile
@@ -267,7 +265,7 @@ function antivirus()
     if [[ $? -eq 0 ]]; then
     	echo "
 
-    	Dump antivirus artifacts"
+    Dump antivirus artifacts"
     
     	# CLamAV
 
