@@ -3,9 +3,9 @@ COMMUNITY_PACKAGES=patchelf
 ALPINE_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.10
 APK=http://dl-cdn.alpinelinux.org/alpine/v3.10/main/x86_64/apk-tools-static-2.10.8-r0.apk 
 
-all:	clean orc package
+all:	clean dlc package
 
-orc:
+dlc:
 	mkdir alpine && cd alpine \
 	&& wget $(APK) -O - | tar -xzv \
 	&& mkdir -p run bin usr/bin usr/sbin target \
