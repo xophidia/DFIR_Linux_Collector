@@ -1,7 +1,14 @@
 #!/bin/bash
+start=`date +%s`
+
+if [ "$1" = "full" ]; then
+    echo "Collecting with dump RAM"
+    list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
+else
+    list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus)
+fi
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
-list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
@@ -379,3 +386,11 @@ for method in ${list_method[@]}
 do
     $method
 done
+
+end=`date +%s`
+runtime=$((end-start))
+echo ""
+echo "##################################"
+echo "Collect completed in $((runtime / 60))min $((runtime % 60))sec"
+echo "##################################"
+
