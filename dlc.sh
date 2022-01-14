@@ -1,12 +1,10 @@
 #!/bin/bash
 start=`date +%s`
 
-if [ "$1" = "full" ]; then
-    echo "Collecting with dump RAM"
-    list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
-else
-    list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus)
-fi
+list_method_light=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus)
+list_method_medium=(${list_method_light[@]} interestFile)
+#list_method_medium=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile)
+list_method_full=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
 log_fedora=(program.log storage.log yum.log syslog) 
@@ -339,6 +337,14 @@ function dump_ram()
 }
 
 
+function collect(){
+local -n list_method=$1
+
+for method in ${list_method[@]}
+do
+    $method
+done
+}
 
 banner
 
@@ -379,13 +385,34 @@ export host=$host
 export desc=$desc
 export caseNumber=$caseNumber
 
-
-
-
-for method in ${list_method[@]}
+echo "    Please select collect Mode:"
+PS3='    Choose an option: '
+options=("Light" "Medium (Light mode + File Artifacts)" "Full (Medium mode + Memory Dump)" "Quit")
+select opt in "${options[@]}"
 do
-    $method
+    case $opt in
+        "Light")
+            echo "Light mode selected"
+	    collect list_method_full
+            ;;
+        "Medium (Light mode + File Artifacts)")
+            echo "Medium mode selected"
+	    collect list_method_medium
+	    break
+            ;;
+        "Full (Medium mode + Memory Dump)")
+            echo "Full mode selected"
+	    collect list_method_full
+	    break
+            ;;
+        "Quit")
+	    exit 0
+            ;;	    
+        *) echo "invalid option $REPLY";;
+    esac
 done
+
+
 
 end=`date +%s`
 runtime=$((end-start))
