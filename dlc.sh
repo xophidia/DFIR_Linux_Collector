@@ -1,7 +1,11 @@
 #!/bin/bash
+start=`date +%s`
+
+list_method_light=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus)
+list_method_medium=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile)
+list_method_full=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
-list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 log_fedora=(program.log storage.log yum.log syslog) 
 action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
@@ -63,45 +67,58 @@ function verif()
 function interestFile()
 {
 
-echo "    
+    echo "    
     Dump files artifacts"
-    #Dump files with interesting rights"
-printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
+    printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
     
 
-#HASHS MD5
+    #HASHS MD5
 
-outputpath="$OUTPUT/Hashes/"
-outfile="$outputpath/MD5_hashes.json"
-mkdir $outputpath
-find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
-cat $outputpath/MD5_hashes | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
-tmp=$(sed '$ s/.$//' $outfile)
-echo "$tmp],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
-verif $? "MD5 Hashes (executable files)"
+    outputpath="$OUTPUT/Hashes/"
+    outfile="$outputpath/MD5_hashes.json"
+    mkdir $outputpath
+    find / -type f -xdev -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
+    #find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
+    cat $outputpath/MD5_hashes | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
+    tmp=$(sed '$ s/.$//' $outfile)
+    #Remove spaces
+    tmp_final=$(echo $tmp| sed 's/\ //g')
+    echo "$tmp_final],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+    verif $? "MD5 Hashes (executable files)"
 
-outfile=$OUTPUT/interest_files.json
-echo "{\"interest_files\": {" >> $outfile
-action=('-o=s' '-u=s' '-g=s')
-   for act in ${action[@]}
-   do
+    #Files with interesting rights
+
+    outfile=$OUTPUT/interest_files.json
+    echo "{\"interest_files\": {" >> $outfile
+    action=('-o=s' '-u=s' '-g=s')
+    for act in ${action[@]}
+    do
         echo "\"File ${act}\":[ ">> $outfile
-        tmp=$(find / -path /proc -prune -o -type f -perm ${act} -exec echo "{\"Path\": \"{}\"}," \; 2>/dev/null | sed 's/\\/\\\\/g')
+        tmp=$(find /  -xdev -path /proc -prune -o -type f -perm ${act} -exec echo "{\"Path\": \"{}\"}," \; 2>/dev/null | sed 's/\\/\\\\/g')
         echo $tmp | sed '$ s/.$//' >> $outfile
         echo "]," >> $outfile
-done
+    done
 
-finaltmp=$(sed '$ s/.$//' $outfile)
-echo "$finaltmp, \"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}}" > $outfile
-verif $? "interestFile"
+    finaltmp=$(sed '$ s/.$//' $outfile)
+    echo "$finaltmp, \"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}}" > $outfile
+    verif $? "interestFile"
     
-
+    #TIMELINE
+    
+    outfile="$OUTPUT/timeline.csv"
+    printf "Access Date,Access Time,Modify Date,Modify Time,Create Date,Create Time,Permissions,User ID,Group ID,File Size,Filename\n" >> $outfile
+    find / -xdev -printf "%Ax,%AT,%Tx,%TT,%Cx,%CT,%m,%U,%G,%s,%p\n" 2>>/dev/null >> $outfile
+    if [[ ! -z "$outfile" ]]; then
+    	verif "0" "timeline"
+    else
+    	verif $? "timeline"
+    fi
 }
 
 function exportRawKernelArtefacts()
 {
 
-echo "
+    echo "
     Dump kernel artifacts"
 
   test -f /boot/vmlinuz-$(uname -r)
@@ -125,7 +142,7 @@ echo "
 function artefactsDistribution()
 {
 
-echo "
+    echo "
     Dump artifacts / linux distribution"
 
     for distr in ${ver_dist[@]}
@@ -248,15 +265,6 @@ function generic()
     echo "$tmp_last],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
     verif $? "last"
     
-    #TIMELINE
-    outfile="$OUTPUT/timeline.csv"
-    printf "Access Date,Access Time,Modify Date,Modify Time,Create Date,Create Time,Permissions,User ID,Group ID,File Size,Filename\n" >> $outfile
-    find / -printf "%Ax,%AT,%Tx,%TT,%Cx,%CT,%m,%U,%G,%s,%p\n" 2>>/dev/null >> $outfile
-    if [[ ! -z "$outfile" ]]; then
-    	verif "0" "timeline"
-    else
-    	verif $? "timeline"
-    fi
 }
 
 function antivirus()
@@ -270,11 +278,11 @@ function antivirus()
     	# CLamAV
 
     	clamav_version=$(cat /var/log/syslog | grep freshclam | grep "Local version" | awk -F: '{print $7}' | cut -d " " -f2 | tail -1)
-   	 update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
-   	 sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
+  	update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
+   	sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
 
-   	 echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
-   	 verif $? "ClamAV"
+   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
+   	verif $? "ClamAV"
     fi
 }
 
@@ -315,8 +323,8 @@ function user()
     Dump user artifacts"
     for act in ${action[@]}
     do
-     ./scripts/$act.sh 2>/dev/null
-     verif $? $act
+        ./scripts/$act.sh 2>/dev/null
+        verif $? $act
     done
 }
 
@@ -332,6 +340,15 @@ function dump_ram()
 }
 
 
+function collect()
+{
+    local -n list_method=$1
+
+    for method in ${list_method[@]}
+    do
+        $method
+    done
+}
 
 banner
 
@@ -372,10 +389,44 @@ export host=$host
 export desc=$desc
 export caseNumber=$caseNumber
 
-
-
-
-for method in ${list_method[@]}
+echo ""
+echo "==========================="
+echo "Please select collect mode:"
+echo "==========================="
+PS3="Choose an option [1-4]:  "
+options=("Light" "Medium (Light mode + File Artifacts)" "Full (Medium mode + Memory Dump)" "Quit")
+select opt in "${options[@]}"
 do
-    $method
+    case $opt in
+        "Light")
+            echo "Light mode selected"
+	    collect list_method_light
+	    break
+            ;;
+        "Medium (Light mode + File Artifacts)")
+            echo "Medium mode selected"
+	    collect list_method_medium
+	    break
+            ;;
+        "Full (Medium mode + Memory Dump)")
+            echo "Full mode selected"
+	    collect list_method_full
+	    break
+            ;;
+        "Quit")
+	    echo "${rouge}Bye!${normal}"	
+	    exit 0
+            ;;	    
+        *) echo "${rouge}Invalid option, please retry! $REPLY${normal}";;
+    esac
 done
+
+
+
+end=`date +%s`
+runtime=$((end-start))
+echo ""
+echo "##################################"
+echo "Collect completed in $((runtime / 60))min $((runtime % 60))sec"
+echo "##################################"
+
