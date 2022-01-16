@@ -27,11 +27,7 @@ echo "Launching tools ..."
 export LD_LIBRARY_PATH=$PWD/lib:$PWD/usr/lib:$PWD/usr/lib/sudo
 
 
-if [ "$1" = "full" ]; then
-    bash ./dlc.sh full 2>&1 | tee $OUTPUT/dlc.log
-elif [ "$1" = "full" ]; then
-    bash ./dlc.sh full 2>&1 | tee $OUTPUT/dlc.log
-elif [ "$1" = "rescue" ]; then
+if [ "$1" = "rescue" ]; then
     echo "**** Mode rescue. ****"
     echo "Les commandes que vous tapez sont sécurisées."
     bash
