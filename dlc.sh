@@ -94,7 +94,7 @@ function interestFile()
     for act in ${action[@]}
     do
         echo "\"File ${act}\":[ ">> $outfile
-        tmp=$(find / -path /proc -prune -o -type f -perm ${act} -exec echo "{\"Path\": \"{}\"}," \; 2>/dev/null | sed 's/\\/\\\\/g')
+        tmp=$(find /  -xdev -path /proc -prune -o -type f -perm ${act} -exec echo "{\"Path\": \"{}\"}," \; 2>/dev/null | sed 's/\\/\\\\/g')
         echo $tmp | sed '$ s/.$//' >> $outfile
         echo "]," >> $outfile
     done
