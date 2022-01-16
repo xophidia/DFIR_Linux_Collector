@@ -186,23 +186,6 @@ Uncompressing orc  100%
 | ClamAV | :heavy_check_mark: | --- | --- |
 
 
-## How to configure
-
-Add the chosen method to the list to enable this action
-
-Ex: add dump_ram() at the end of list_method 
-```
-list_method=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
-```
-Then you need to make again
-
-```
-sudo make
-sudo ./DFIR_linux_collector
-```
-
-All methods are in dlc.sh
-
 ## License
 
 
