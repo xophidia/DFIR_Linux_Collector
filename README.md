@@ -17,6 +17,7 @@ Stand-alone collecting tools for Gnu/Linux
 | Ubuntu | 12 - 20 | :heavy_check_mark: |  --- | --- |
 | Debian | > 8 | :heavy_check_mark: |  --- | --- |
 | Fedora | 30| :heavy_check_mark: |  --- | --- |
+| CentOS | 7| :heavy_check_mark: |  --- | --- |
 
 The other distributions are not yet tested, still in progress ...
 
