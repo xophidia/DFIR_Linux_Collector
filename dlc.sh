@@ -107,7 +107,7 @@ function interestFile()
     
     outfile="$OUTPUT/timeline.csv"
     printf "Access Date,Access Time,Modify Date,Modify Time,Create Date,Create Time,Permissions,User ID,Group ID,File Size,Filename\n" >> $outfile
-    find / -printf "%Ax,%AT,%Tx,%TT,%Cx,%CT,%m,%U,%G,%s,%p\n" 2>>/dev/null >> $outfile
+    find / -xdev -printf "%Ax,%AT,%Tx,%TT,%Cx,%CT,%m,%U,%G,%s,%p\n" 2>>/dev/null >> $outfile
     if [[ ! -z "$outfile" ]]; then
     	verif "0" "timeline"
     else
