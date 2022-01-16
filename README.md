@@ -168,6 +168,7 @@ Uncompressing orc  100%
 | Command / file | Json | Text | Raw | Csv |
 | --- | --- | --- | --- | --- |
 | hashes MD5 | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
+| interestFiles | :heavy_check_mark: | --- | --- | --- |
 | timeline | --- | --- | --- |:heavy_check_mark:|
 
 :radio_button: Dump
