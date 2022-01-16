@@ -113,7 +113,6 @@ Uncompressing orc  100%
 |cpuinfo| :heavy_check_mark: | --- | --- |
 |lsof| --- |  :heavy_check_mark: | --- |
 |sudoers| :heavy_check_mark: | --- | --- |
-|file -o=w -g=s | :heavy_check_mark: | --- | --- |
 |mount| :heavy_check_mark: | --- | --- |
 |fstab| :heavy_check_mark: | --- | --- |
 |last| :heavy_check_mark: | --- | --- |
