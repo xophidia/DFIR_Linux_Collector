@@ -1,6 +1,7 @@
 #!/bin/bash
 
-outputpath="$OUTPUT/History"
+#outputpath="$OUTPUT/History"
+outputpath="History"
 outfile="$outputpath/commands_history.json"
 historyfiles=( ".bash_history" ".zsh_history")
 mkdir $outputpath
@@ -13,7 +14,7 @@ for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
 	echo "{\"File\": \"$X/.bash_history\"," >> $outfile
 	echo "\"Commands\" : [" >> $outfile
 	#Delete non printable caracters
-        sed "s/[^[:print:]]//g" $outputpath$X/bash_history > $outputpath$X/tmp_bash_history
+        sed 's/[^[:print:]]//g;s/\\/\\\\/g;s/\"/\\"/g' $outputpath$X/bash_history > $outputpath$X/tmp_bash_history
 	
 	while read line 
 	do
