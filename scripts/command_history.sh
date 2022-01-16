@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#outputpath="$OUTPUT/History"
-outputpath="History"
+outputpath="$OUTPUT/History"
 outfile="$outputpath/commands_history.json"
 historyfiles=( ".bash_history" ".zsh_history")
 mkdir $outputpath
