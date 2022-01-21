@@ -1,18 +1,26 @@
 #!/bin/bash
+
+# Set start date
 start=`date +%s`
 
+# Set collect mode methods
 list_method_light=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus)
 list_method_medium=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile)
 list_method_full=(generic network process user artefactsDistribution exportRawKernelArtefacts antivirus interestFile dump_ram)
 
+# OS list
 ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
-log_fedora=(program.log storage.log yum.log syslog) 
-action=(c_ssh firefox c_git chromium google-chrome command_history vim)
 
+# Fedora logs list
+log_fedora=(program.log storage.log yum.log syslog)
 
-jaune=$(tput setaf 3)
-vert=$(tput setaf 2)
-rouge=$(tput setaf 1)
+# Custom scripts list
+action=(c_ssh firefox c_git chromium google-chrome command_history vim desktop)
+
+# Set colors
+yellow=$(tput setaf 3)
+green=$(tput setaf 2)
+red=$(tput setaf 1)
 normal=$(tput sgr0)
 
 
@@ -40,7 +48,7 @@ echo "
 function verif()
 {
     if [[ $1 -eq 0 ]]; then
-	    printf  "   ${rouge} + ${normal} $2 "
+	    printf  "   ${red} + ${normal} $2 "
 	    size=$(wc -c <<< $2)
             val=$(( 26 - $size ))
 
@@ -48,9 +56,9 @@ function verif()
 	    do 
 		    printf '.'
 	    done; 
-	    printf "${vert}[success]${normal}\n"
+	    printf "${greeb}[success]${normal}\n"
     else
-	    printf "   ${rouge} + ${normal} $2 "
+	    printf "   ${red} + ${normal} $2 "
 	    size=$(wc -c <<< $2)
             val=$(( 26 - $size ))
 
@@ -58,7 +66,7 @@ function verif()
 	    do 
 		    printf '.'
 	    done; 
-	    printf "${rouge}[failed]${normal}\n"
+	    printf "${red}[failed]${normal}\n"
     fi
 }
 
@@ -69,7 +77,7 @@ function interestFile()
 
     echo "    
     Dump files artifacts"
-    printf "    ${jaune}-${normal} Please wait, it may take some time ...\n"
+    printf "    ${yellow}-${normal} Please wait, it may take some time ...\n"
     
 
     #HASHS MD5
@@ -157,7 +165,7 @@ function artefactsDistribution()
     case $distri_id in
 
        "lsb" | "debian")
-               printf "   ${rouge} + ${normal} Debian-like artifacts \n"
+               printf "   ${red} + ${normal} Debian-like artifacts \n"
                test -f /var/log/installer/debug
 	       if [[ $? -eq 0 ]]; then
 	           more /var/log/installer/debug > $OUTPUT/$distri_id"installer_debug.txt"
@@ -179,7 +187,7 @@ function artefactsDistribution()
                ;;
       
        "redhat" | "fedora" | "centos" )
-	       printf "   ${rouge} + ${normal} RedHat-like artifacts \n"
+	       printf "   ${red} + ${normal} RedHat-like artifacts \n"
                for el in ${log_fedora[@]}
                do
                    test -f /var/log/anaconda/$el
@@ -195,7 +203,7 @@ function artefactsDistribution()
                ;;
 
        "SuSE")
-               printf "   ${rouge} + ${normal} Suse-like artifacts \n"
+               printf "   ${red} + ${normal} Suse-like artifacts \n"
 	       ;;
 
        *)
@@ -276,12 +284,11 @@ function antivirus()
     Dump antivirus artifacts"
     
     	# CLamAV
-
     	clamav_version=$(cat /var/log/syslog | grep freshclam | grep "Local version" | awk -F: '{print $7}' | cut -d " " -f2 | tail -1)
   	update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
    	sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
 
-   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
+   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }'
    	verif $? "ClamAV"
     fi
 }
@@ -355,14 +362,14 @@ banner
 read -p "    Case Number : " caseNumber
 while [ -z $caseNumber ] 
 do
-    echo "${rouge}You must enter a case number${normal}"
+    echo "${red}You must enter a case number${normal}"
     read -p "    Case Number : " caseNumber
 done
 
 read -p "    Description : " desc
 while [ -z $desc ] 
 do
-    echo "${rouge}You must enter a description${normal}"
+    echo "${red}You must enter a description${normal}"
 read -p "    Description : " desc
 done
 
@@ -370,7 +377,7 @@ done
 read -p "    Examiner Name : " user
 while [ -z $user ] 
 do
-    echo "${rouge}You must enter an Examiner Name${normal}"
+    echo "${red}You must enter an Examiner Name${normal}"
 read -p "    Examiner Name : " user
 done
 
@@ -378,7 +385,7 @@ done
 read -p "    Hostname : " host
 while [ -z $host ] 
 do
-    echo "${rouge}You must enter a HostName${normal}"
+    echo "${red}You must enter a HostName${normal}"
 read -p "    Hostname : " host
 done
 
@@ -414,17 +421,19 @@ do
 	    break
             ;;
         "Quit")
-	    echo "${rouge}Bye!${normal}"	
+	    echo "${red}Bye!${normal}"	
 	    exit 0
             ;;	    
-        *) echo "${rouge}Invalid option, please retry! $REPLY${normal}";;
+        *) echo "${red}Invalid option, please retry! $REPLY${normal}";;
     esac
 done
 
 
-
+# Set end time
 end=`date +%s`
 runtime=$((end-start))
+
+
 echo ""
 echo "##################################"
 echo "Collect completed in $((runtime / 60))min $((runtime % 60))sec"
