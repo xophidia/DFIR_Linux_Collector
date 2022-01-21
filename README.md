@@ -170,6 +170,7 @@ Uncompressing orc  100%
 | hashes MD5 | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
 | file perm | :heavy_check_mark: | --- | --- | --- |
 | timeline | --- | --- | --- |:heavy_check_mark:|
+| Trash | --- | --- | --- |---|
 
 :radio_button: Dump
 
