@@ -28,19 +28,3 @@ for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
 done
 tmp_trash=$(sed '$ s/.$//' $outfile)
 echo "$tmp_trash],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
-    
-
-# Frequent App Data
-
-outputpath="$OUTPUT/frequent_app.json"
-
-for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
-    if [ -f "${X}/.local/share/gnome-shell/application_state" ]; then
-	    more "${X}/.local/share/gnome-shell/application_state" 
-    fi
-done
-
-
-
-        
-    
