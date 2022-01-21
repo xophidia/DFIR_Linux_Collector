@@ -5,6 +5,8 @@
 outfile="$OUTPUT/frequent_app.json"
 echo "{\"frequent apps\": [" >> $outfile
 for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
+    # GNOME Desktop
+
     if [ -f "${X}/.local/share/gnome-shell/application_state" ]; then
 	    echo "{\"User\": \"${X}\", \"apps\": [" >> $outfile
             while read line 
