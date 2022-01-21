@@ -166,6 +166,7 @@ Uncompressing orc  100%
 :radio_button: Desktop
 
 | Command / file | Json | Text | Raw |
+| --- | --- | --- | --- |
 | trash | --- | --- | --- |
 
 :radio_button: Files
