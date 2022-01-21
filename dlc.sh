@@ -15,7 +15,7 @@ ver_dist=(redhat centos fedora debian lsb gentoo SuSE)
 log_fedora=(program.log storage.log yum.log syslog)
 
 # Custom scripts list
-action=(c_ssh firefox c_git chromium google-chrome command_history vim trash)
+action=(c_ssh firefox c_git chromium google-chrome command_history vim trash frequent_apps)
 
 # Set colors
 yellow=$(tput setaf 3)
