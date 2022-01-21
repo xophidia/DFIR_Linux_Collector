@@ -163,6 +163,11 @@ Uncompressing orc  100%
 | .command_history (bash + zsh) | :heavy_check_mark: | --- | --- |
 | .viminfo | --- | :heavy_check_mark: | --- |
 
+:radio_button: Desktop
+
+| Command / file | Json | Text | Raw |
+| trash | --- | --- | --- |
+
 :radio_button: Files
 
 | Command / file | Json | Text | Raw | Csv |
@@ -170,7 +175,7 @@ Uncompressing orc  100%
 | hashes MD5 | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
 | file perm | :heavy_check_mark: | --- | --- | --- |
 | timeline | --- | --- | --- |:heavy_check_mark:|
-| Trash | --- | --- | --- |---|
+
 
 :radio_button: Dump
 
