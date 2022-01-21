@@ -56,7 +56,7 @@ function verif()
 	    do 
 		    printf '.'
 	    done; 
-	    printf "${greeb}[success]${normal}\n"
+	    printf "${green}[success]${normal}\n"
     else
 	    printf "   ${red} + ${normal} $2 "
 	    size=$(wc -c <<< $2)
@@ -288,7 +288,7 @@ function antivirus()
   	update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
    	sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
 
-   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }'
+   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
    	verif $? "ClamAV"
     fi
 }
