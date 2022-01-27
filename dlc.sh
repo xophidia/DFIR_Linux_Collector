@@ -330,7 +330,7 @@ function user()
     Dump user artifacts"
     for act in ${action[@]}
     do
-        ./scripts/$act.sh 2>/dev/null
+        bash ./scripts/$act.sh 2>/dev/null
         verif $? $act
     done
 }
