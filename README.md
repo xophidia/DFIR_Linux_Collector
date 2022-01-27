@@ -1,4 +1,5 @@
 # DFIR_Linux_Collector
+![GitHub last commit](https://img.shields.io/github/last-commit/xophidia/DFIR_Linux_Collector) ![GitHub release-date](https://img.shields.io/github/release-date/xophidia/DFIR_Linux_Collector)  
 
 Stand-alone collecting tools for Gnu/Linux
 - Very low impact on the host
@@ -16,8 +17,9 @@ Stand-alone collecting tools for Gnu/Linux
 | --- | --- | --- | --- | ---| 
 | Ubuntu | 12 - 20 | :heavy_check_mark: |  --- | --- |
 | Debian | > 8 | :heavy_check_mark: |  --- | --- |
-| Fedora | 30| :heavy_check_mark: |  --- | --- |
-| CentOS | 7| :heavy_check_mark: |  --- | --- |
+| Fedora | 30 | :heavy_check_mark: |  --- | --- |
+| CentOS | 7 | :heavy_check_mark: |  --- | --- |
+| CentOS | 6 | --- | :heavy_multiplication_x: | Kernel too old |
 
 The other distributions are not yet tested, still in progress ...
 
@@ -162,6 +164,12 @@ Uncompressing orc  100%
 | .command_history (bash + zsh) | :heavy_check_mark: | --- | --- |
 | .viminfo | --- | :heavy_check_mark: | --- |
 
+:radio_button: Desktop
+
+| Command / file | Json | Text | Raw |
+| --- | --- | --- | --- |
+| trash | --- | --- | --- |
+
 :radio_button: Files
 
 | Command / file | Json | Text | Raw | Csv |
@@ -169,6 +177,7 @@ Uncompressing orc  100%
 | hashes MD5 | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
 | file perm | :heavy_check_mark: | --- | --- | --- |
 | timeline | --- | --- | --- |:heavy_check_mark:|
+
 
 :radio_button: Dump
 
