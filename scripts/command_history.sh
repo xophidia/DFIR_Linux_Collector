@@ -1,11 +1,13 @@
 #!/bin/bash
 
-outputpath="$OUTPUT/History"
+outputpath="History"
 outfile="$outputpath/commands_history.json"
 historyfiles=( ".bash_history" ".zsh_history")
 mkdir $outputpath
 
-echo "{\"Command History\":[ " >> $outfile
+echo '{ \"Command History\": []},{\"Metadata\": { \"Case Number\": \"caseNumber\"}}]}' > "test.json"
+
+
 for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
     if [ -s "${X}/.bash_history" ] ; then
 	mkdir -p $outputpath${X}
@@ -20,11 +22,11 @@ for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
 	    if [ ! -z "$line" ]; then
 		echo \"${line//\"/\\\"}\", >> $outfile
 		fi
-	    done < $outputpath${X}/tmp_bash_history
-	    tmp_history=$(sed '$ s/.$//' $outfile)
-	    echo $tmp_history > $outfile
-	    echo "]}," >> $outfile
-	    rm -f $outputpath$X/tmp_bash_history
+	done < $outputpath$X/tmp_bash_history
+	tmp_history=$(sed '$ s/.$//' $outfile)
+	echo $tmp_history > $outfile
+	echo "]}," >> $outfile
+	#rm -f $outputpath$X/tmp_bash_history
     fi
     if [ -s "${X}/.zsh_history" ]; then
 	mkdir -p $outputpath${X}

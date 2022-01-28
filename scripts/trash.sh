@@ -27,4 +27,4 @@ for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
     fi
 done
 tmp_trash=$(sed '$ s/.$//' $outfile)
-echo "$tmp_trash],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+echo "$tmp_trash],\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
