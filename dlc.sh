@@ -91,7 +91,7 @@ function interestFile()
     tmp=$(sed '$ s/.$//' $outfile)
     #Remove spaces
     tmp_final=$(echo $tmp| sed 's/\ //g')
-    echo "$tmp_final],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+    echo "$tmp_final],\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
     verif $? "MD5 Hashes (executable files)"
 
     #Files with interesting rights
@@ -108,7 +108,7 @@ function interestFile()
     done
 
     finaltmp=$(sed '$ s/.$//' $outfile)
-    echo "$finaltmp, \"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}}" > $outfile
+    echo "$finaltmp, \"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}}" > $outfile
     verif $? "interestFile"
     
     #TIMELINE
@@ -270,7 +270,7 @@ function generic()
 	done
 
     tmp_last=$(sed '$ s/.$//' $outfile)
-    echo "$tmp_last],\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
+    echo "$tmp_last],\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
     verif $? "last"
     
 }
