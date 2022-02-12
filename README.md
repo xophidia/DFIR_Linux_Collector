@@ -161,7 +161,7 @@ Uncompressing orc  100%
 | Command / file | Json | Text | Raw |
 | --- | --- | --- | --- |
 | .gitconfig | :heavy_check_mark: | --- | --- |
-| .command_history (bash + zsh) | :heavy_check_mark: | --- | --- |
+| .command_history (bash + zsh) | :heavy_check_mark: | --- | :heavy_check_mark: |
 | .viminfo | --- | :heavy_check_mark: | --- |
 
 :radio_button: Desktop
