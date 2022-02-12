@@ -5,7 +5,7 @@ outfile="$outputpath/commands_history.json"
 historyfiles=( ".bash_history" ".zsh_history")
 mkdir $outputpath
 
-echo '{ "command_history": [],"metadata": { "CaseNumber": "caseNumber", "Description" : "desc", "Username": "user", "Hostname": "SIFT"}}' > $outfile
+echo '{ "command_history": [],"metadata": { "CaseNumber": "'$caseNumber'", "Description" : "'$desc'", "Username": "'$user'", "Hostname": "'$host'"}}' > $outfile
 
 COUNTER=0
 for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq);
