@@ -1,13 +1,39 @@
 #!/bin/bash
 
+outputpath="$OUTPUT/Ssh"
+outfile="$outputpath/ssh_config.json"
 
-for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
-  for suffix in "" "2"; do
-    if [ -s "${X}/.ssh/authorized_keys$suffix" ]; then
-	    jq --raw-input '{"authorized_keys": '.'}' < <(cat "${X}/.ssh/authorized_keys$suffix")  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >> $OUTPUT/ssh_authorized_keys.json
-    fi;
-   done;
+mkdir $outputpath
+
+echo '{ "ssh": [],"metadata": { "CaseNumber": "'$caseNumber'", "Description" : "'$desc'", "Username": "'$user'", "Hostname": "'$host'"}}' > $outfile
+
+COUNTER=0
+
+for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq);
+do
+    if [ -s "${X}/.ssh/authorized_keys" ]; then
+	mkdir -p $outputpath${X}
+        cp ${X}/.ssh/authorized_keys $outputpath${X}/authorized_keys
+	tmp=$(jq  '.ssh += [{"File": "'${X}'/.ssh/authorized_keys","authorized_keys" : []}]' $outfile) && echo $tmp > $outfile
+	while read line
+        do
+            if [ ! -z "$line" ]; then
+                tmp=$(jq --arg line "$line" '.ssh['${COUNTER}'].authorized_keys += [$line]' $outfile) && echo -E $tmp > $outfile
+            fi
+        done < $outputpath$X/authorized_keys
+	((COUNTER++))
+    fi
     if [ -s "${X}/.ssh/known_hosts" ]; then
-            jq --raw-input '{"known_hosts": '.'}' < <(cat "${X}/.ssh/known_hosts")  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >> $OUTPUT/ssh_known_hosts.json
+	mkdir -p $outputpath${X}
+        cp ${X}/.ssh/known_hosts $outputpath${X}/known_hosts
+	tmp=$(jq  '.ssh += [{"File": "'${X}'/.ssh/known_hosts","known_hosts" : []}]' $outfile) && echo $tmp > $outfile
+	while read line
+        do
+            if [ ! -z "$line" ]; then
+                tmp=$(jq --arg line "$line" '.ssh['${COUNTER}'].known_hosts += [$line]' $outfile) && echo -E $tmp > $outfile
+	    fi
+        done < $outputpath$X/known_hosts
+	((COUNTER++))
+
     fi
 done
