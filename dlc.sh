@@ -1,5 +1,13 @@
 #!/bin/bash
 
+
+#Todo
+# timedatectl
+# w (logged users)
+# faillog -a
+# chkconfig --list (list services)
+# cat /etc/pam.d/common/*
+
 # Set start date
 start=`date +%s`
 
@@ -86,7 +94,6 @@ function interestFile()
     outfile="$outputpath/MD5_hashes.json"
     mkdir $outputpath
     find / -type f -xdev -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
-    #find / -type f -executable -not \( -path "/proc/*" -o -path "/sys/*" \) -exec md5sum {} \; 2>/dev/null > $outputpath/MD5_hashes
     cat $outputpath/MD5_hashes | awk -F' ' 'BEGIN{print "{ \"MD5 Hashes\" : ["}  {print "{\"hash\": \"",$1,"\", \"file\": \"",$2,"\"},"}' >> $outfile
     tmp=$(sed '$ s/.$//' $outfile)
     #Remove spaces
@@ -182,7 +189,7 @@ function artefactsDistribution()
                    verif $? "auth"
 	       fi
 
-    	       more /var/log/syslog | sed 's/\\/\\\\/g' | sed s/"\""/"'"/g | sed s/"\t"//g | awk 'BEGIN{print "{ \"syslog\" : ["}  {print "{\"data\": \"",$0,"\"},"} END{print "]}"}  ENDFILE{print "{\"data\": \"",$0,"\"}"}'| jq 'del(.auth[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_syslog.json
+    	       more /var/log/syslog | sed 's/\\/\\\\/g' | sed s/"\""/"'"/g | sed s/"\t"//g | awk 'BEGIN{print "{ \"syslog\" : ["}  {print "{\"data\": \"",$0,"\"},"} END{print "]}"}  ENDFILE{print "{\"data\": \"",$0,"\"}"}'| jq 'del(.auth[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_syslog.json
                verif $? "syslog"
                ;;
       
@@ -219,43 +226,43 @@ function generic()
     
     echo "
     Dump generic artifacts"
-    jq --raw-input '{"uname": '.'}' < <(uname -a)  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_uname.json
+    jq --raw-input '{"uname": '.'}' < <(uname -a)  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_uname.json
     verif $? "uname"
 
-    env | awk -F= 'BEGIN{print "{ \"env\" : ["} {print "{\"envars\": \"",$1,"\", \"data\": \"",$2,"\"},"} END{print "]}"} ENDFILE{print "  {\"envars\": \"",$1,"\", \"data\": \"",$2,"\"}"}'  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_env.json
+    env | awk -F= 'BEGIN{print "{ \"env\" : ["} {print "{\"envars\": \"",$1,"\", \"data\": \"",$2,"\"},"} END{print "]}"} ENDFILE{print "  {\"envars\": \"",$1,"\", \"data\": \"",$2,"\"}"}'  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_env.json
     verif $? "env"
 
-    jq --raw-input '{"uptime": '.'}' < <(uptime) | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_uptime.json
+    jq --raw-input '{"uptime": '.'}' < <(uptime) | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_uptime.json
     verif $? "uptime"
 
-    lsmod | awk 'BEGIN{print "{ \"lsmod\" : ["} {print "  {\"Module\": \"",$1,"\", \"Size\": \"",$2,"\", \"UsedBy\": \"",$3,"\", \"NotTainted\": \"",$4,"\"},"}  END{print "]}"} ENDFILE{print "  {\"Module\": \"",$1,"\", \"Size\": \"",$2,"\", \"UsedBy\": \"",$3,"\", \"NotTainted\": \"",$4,"\"}"}' | jq 'del(.env[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_lsmod.json
+    lsmod | awk 'BEGIN{print "{ \"lsmod\" : ["} {print "  {\"Module\": \"",$1,"\", \"Size\": \"",$2,"\", \"UsedBy\": \"",$3,"\", \"NotTainted\": \"",$4,"\"},"}  END{print "]}"} ENDFILE{print "  {\"Module\": \"",$1,"\", \"Size\": \"",$2,"\", \"UsedBy\": \"",$3,"\", \"NotTainted\": \"",$4,"\"}"}' | jq 'del(.env[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_lsmod.json
     verif $? "lsmod"
 
-    more /etc/passwd | awk -F: 'BEGIN{print "{ \"pwd\" : ["} {print "  {\"user\": \"",$1,"\", \"user_group\": \"",$3,$4,"\",\"Home\": \"",$6,"\",\"shell\": \"",$7"\"},"} END{print "]}"} ENDFILE{print "  {\"user\": \"",$1,"\", \"user_group\": \"",$3,$4,"\",\"Home\": \"",$6,"\",\"shell\": \"",$7"\"}"}' | jq 'del(.pwd[-1:])'  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_passwd.json
+    more /etc/passwd | awk -F: 'BEGIN{print "{ \"pwd\" : ["} {print "  {\"user\": \"",$1,"\", \"user_group\": \"",$3,$4,"\",\"Home\": \"",$6,"\",\"shell\": \"",$7"\"},"} END{print "]}"} ENDFILE{print "  {\"user\": \"",$1,"\", \"user_group\": \"",$3,$4,"\",\"Home\": \"",$6,"\",\"shell\": \"",$7"\"}"}' | jq 'del(.pwd[-1:])'  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_passwd.json
     verif $? "passwd"
 
-    jq --raw-input '{"date": '.'}' < <(date)  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_date.json
+    jq --raw-input '{"date": '.'}' < <(date)  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_date.json
     verif $? "date"
 
-    jq --raw-input '{"who": '.'}' < <(who)  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_who.json
+    jq --raw-input '{"who": '.'}' < <(who)  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_who.json
     verif $? "who"
 
-    more /proc/cpuinfo | awk -F':' 'BEGIN{print "{ \"cpuinfo\" : ["}  gsub(/[[:blank:]]/,"",$1) gsub(/[[:blank:]]/,"",$2) {print "{\"id\": \""$1"\", \"data\": \""$2"\"},"} END{print "]}"}  ENDFILE{print "{\"id\": \"",$1,"\", \"data\": \"",$2,"\"}"}' | jq 'del(.cpuinfo[-1:])'  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_cpuinfo.json
+    more /proc/cpuinfo | awk -F':' 'BEGIN{print "{ \"cpuinfo\" : ["}  gsub(/[[:blank:]]/,"",$1) gsub(/[[:blank:]]/,"",$2) {print "{\"id\": \""$1"\", \"data\": \""$2"\"},"} END{print "]}"}  ENDFILE{print "{\"id\": \"",$1,"\", \"data\": \"",$2,"\"}"}' | jq 'del(.cpuinfo[-1:])'  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_cpuinfo.json
     verif $? "cpuinfo"
     
-    more /etc/group | awk -F':' 'BEGIN{print "{ \"group\" : ["}  {print "{\"user\": \"",$1,"\", \"group\": \"",$3,"\"},"} END{print "]}"} ENDFILE {print "{\"user\": \"",$1,"\", \"group\": \"",$3,"\"}"}' | jq 'del(.group[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_group.json
+    more /etc/group | awk -F':' 'BEGIN{print "{ \"group\" : ["}  {print "{\"user\": \"",$1,"\", \"group\": \"",$3,"\"},"} END{print "]}"} ENDFILE {print "{\"user\": \"",$1,"\", \"group\": \"",$3,"\"}"}' | jq 'del(.group[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >$OUTPUT/gen_group.json
     verif $? "group"
     
     lsof > $OUTPUT/gen_lsof 2>/dev/null
     verif $? "lsof"
 
-    mount 2>/dev/null | awk 'BEGIN{print "{ \"mount\" : ["} {print "{\"device\": \""$1"\", \"mountpoint\": \""$3"\", \"type\": \""$5"\", \"attributes\": \""$6"\"},"} END{print "]}"} ENDFILE {print "{\"device\": \"",$1,"\", \"mountpoint\": \"",$3,"\", \"type\": \"",$5,"\", \"attributes\": \"",$6,"\"}"}' | jq 'del(.mount[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_mount.json
+    mount 2>/dev/null | awk 'BEGIN{print "{ \"mount\" : ["} {print "{\"device\": \""$1"\", \"mountpoint\": \""$3"\", \"type\": \""$5"\", \"attributes\": \""$6"\"},"} END{print "]}"} ENDFILE {print "{\"device\": \"",$1,"\", \"mountpoint\": \"",$3,"\", \"type\": \"",$5,"\", \"attributes\": \"",$6,"\"}"}' | jq 'del(.mount[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_mount.json
     verif $? "mount"
 
-    more /etc/sudoers | grep -v '#\|Defaults' | awk 'NF' | awk '$1=$1' |awk -F= 'BEGIN{print "{ \"sudoers\" : ["} {print "{\"user\": \""$1"\", \"data\": \""$2"\"},"} END{print "]}"} ENDFILE{print "{\"user\": \""$1"\", \"data\": \""$2"\"}"}' | jq 'del(.sudoers[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_sudoers.json
+    more /etc/sudoers | grep -v '#\|Defaults' | awk 'NF' | awk '$1=$1' |awk -F= 'BEGIN{print "{ \"sudoers\" : ["} {print "{\"user\": \""$1"\", \"data\": \""$2"\"},"} END{print "]}"} ENDFILE{print "{\"user\": \""$1"\", \"data\": \""$2"\"}"}' | jq 'del(.sudoers[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_sudoers.json
     verif $? "sudoers"
 
-    more /etc/fstab | grep -v '#\|Defaults' | awk 'NF' | awk '$1=$1' |awk -F: 'BEGIN{print "{ \"fstab\" : ["} {print "{\"line\": \""$1"\"},"} END{print "]}"} ENDFILE{print "{\"line\": \""$1"\"}"}' | jq 'del(.fstab[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_fstab.json
+    more /etc/fstab | grep -v '#\|Defaults' | awk 'NF' | awk '$1=$1' |awk -F: 'BEGIN{print "{ \"fstab\" : ["} {print "{\"line\": \""$1"\"},"} END{print "]}"} ENDFILE{print "{\"line\": \""$1"\"}"}' | jq 'del(.fstab[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/gen_fstab.json
     verif $? "fstab"
 
 
@@ -268,7 +275,6 @@ function generic()
                         echo \"${line}\",>> $outfile
                 fi
 	done
-
     tmp_last=$(sed '$ s/.$//' $outfile)
     echo "$tmp_last],\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $outfile
     verif $? "last"
@@ -288,7 +294,7 @@ function antivirus()
   	update_date=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d " " -f1-3)
    	sign=$(cat /var/log/syslog | grep freshclam | grep "daily.cld" | tail -1 | cut -d "(" -f2 | cut -d "," -f1 | cut -d " " -f2)
 
-   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
+   	echo "{ \"ClamAV\" : { \"Version\": \"$clamav_version\",\"Update date\": \"$update_date\",\"Signature\": \"$sign\"}}" | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/av.json
    	verif $? "ClamAV"
     fi
 }
@@ -300,14 +306,14 @@ function network()
 
     Dump network artifacts"
 
-    jq --raw-input '{"ip_info": [inputs | capture("^[0-9]+: (?<ifname>[^[:space:]]+)[[:space:]]+inet (?<addr>[^[:space:]/]+)(/(?<masklen>[[:digit:]]+))?")]}' < <(ip -o addr list)  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/network_ip.json
+    jq --raw-input '{"ip_info": [inputs | capture("^[0-9]+: (?<ifname>[^[:space:]]+)[[:space:]]+inet (?<addr>[^[:space:]/]+)(/(?<masklen>[[:digit:]]+))?")]}' < <(ip -o addr list)  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/network_ip.json
     verif $? "ip"	
 
-    netstat -r -n | sed -e '1,2d' | awk 'BEGIN{print "{ \"netstat\": ["} {print "  {\"Destination\": \"",$1,"\", \"Gateway\": \"",$2,"\", \"Genmask\": \"",$3,"\", \"Iface\": \"",$8,"\"},"} END{print "]}"} ENDFILE{print "  {\"Destination\": \"",$1,"\", \"Gateway\": \"",$2,"\", \"Genmask\": \"",$8,"\", \"Iface\": \"",$4,"\"}"}'  | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' | jq 'del(.netstat[-1:])' > $OUTPUT/network_netstat.json
+    netstat -r -n | sed -e '1,2d' | awk 'BEGIN{print "{ \"netstat\": ["} {print "  {\"Destination\": \"",$1,"\", \"Gateway\": \"",$2,"\", \"Genmask\": \"",$3,"\", \"Iface\": \"",$8,"\"},"} END{print "]}"} ENDFILE{print "  {\"Destination\": \"",$1,"\", \"Gateway\": \"",$2,"\", \"Genmask\": \"",$8,"\", \"Iface\": \"",$4,"\"}"}'  | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' | jq 'del(.netstat[-1:])' > $OUTPUT/network_netstat.json
     verif $? "netstat"
  
 
-    arp |sed -e '1d'| awk 'BEGIN{print "{ \"arp\" : ["} {print "  {\"Address\": \"",$1,"\", \"HWType\": \"",$2,"\", \"HWaddress\": \"",$3,"\", \"Flags\": \"",$4,"\", \"Iface\": \"",$5,"\"},"}  END{print "]}"} ENDFILE{print "  {\"Address\": \"",$1,"\", \"HWType\": \"",$2,"\", \"HWaddress\": \"",$3,"\", \"Flags\": \"",$4,"\", \"Iface\": \"",$5,"\"}"}' | jq 'del(.arp[-1:])' |jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/network_arp.json
+    arp |sed -e '1d'| awk 'BEGIN{print "{ \"arp\" : ["} {print "  {\"Address\": \"",$1,"\", \"HWType\": \"",$2,"\", \"HWaddress\": \"",$3,"\", \"Flags\": \"",$4,"\", \"Iface\": \"",$5,"\"},"}  END{print "]}"} ENDFILE{print "  {\"Address\": \"",$1,"\", \"HWType\": \"",$2,"\", \"HWaddress\": \"",$3,"\", \"Flags\": \"",$4,"\", \"Iface\": \"",$5,"\"}"}' | jq 'del(.arp[-1:])' |jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/network_arp.json
     verif $? "arp"
 
 }
@@ -318,7 +324,7 @@ function process()
     echo "
     
     Dump process artifacts"
-    ps -o user,group,pid,ppid,stat,args | awk 'BEGIN{print "{ \"ps\" : ["} {print "  {\"USER\": \"",$1,"\", \"GROUP\": \"",$2,"\", \"PID\": \"",$3,"\", \"PPID\": \"",$4,"\", \"STAT\": \"",$5,"\", \"CMD\": \"",$6,"\"},"} END{print "]}"} ENDFILE {print "  {\"USER\": \"",$1,"\", \"GROUP\": \"",$2,"\", \"PID\": \"",$3,"\", \"PPID\": \"",$4,"\", \"STAT\": \"",$5,"\", \"CMD\": \"",$6,"\"}"}' | jq 'del(.ps[-1:])' | jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/processus_ps.json
+    ps -o user,group,pid,ppid,stat,args | awk 'BEGIN{print "{ \"ps\" : ["} {print "  {\"USER\": \"",$1,"\", \"GROUP\": \"",$2,"\", \"PID\": \"",$3,"\", \"PPID\": \"",$4,"\", \"STAT\": \"",$5,"\", \"CMD\": \"",$6,"\"},"} END{print "]}"} ENDFILE {print "  {\"USER\": \"",$1,"\", \"GROUP\": \"",$2,"\", \"PID\": \"",$3,"\", \"PPID\": \"",$4,"\", \"STAT\": \"",$5,"\", \"CMD\": \"",$6,"\"}"}' | jq 'del(.ps[-1:])' | jq --arg l_user "$user" --arg l_host "$host" --arg l_caseNumber "$caseNumber" --arg l_desc "$desc" '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' > $OUTPUT/processus_ps.json
     verif $? "ps"
 }
 
@@ -360,14 +366,14 @@ function collect()
 banner
 
 read -p "    Case Number : " caseNumber
-while [ -z $caseNumber ] 
+while [ -z "$caseNumber" ] 
 do
     echo "${red}You must enter a case number${normal}"
     read -p "    Case Number : " caseNumber
 done
 
 read -p "    Description : " desc
-while [ -z $desc ] 
+while [ -z "$desc" ] 
 do
     echo "${red}You must enter a description${normal}"
 read -p "    Description : " desc
@@ -375,7 +381,7 @@ done
 
 
 read -p "    Examiner Name : " user
-while [ -z $user ] 
+while [ -z "$user" ] 
 do
     echo "${red}You must enter an Examiner Name${normal}"
 read -p "    Examiner Name : " user
@@ -383,7 +389,7 @@ done
 
 
 read -p "    Hostname : " host
-while [ -z $host ] 
+while [ -z "$host" ] 
 do
     echo "${red}You must enter a HostName${normal}"
 read -p "    Hostname : " host
@@ -391,10 +397,10 @@ done
 
 # pour les scripts externes
 
-export user=$user
-export host=$host
-export desc=$desc
-export caseNumber=$caseNumber
+export user="$user"
+export host="$host"
+export desc="$desc"
+export caseNumber="$caseNumber"
 
 echo ""
 echo "==========================="
