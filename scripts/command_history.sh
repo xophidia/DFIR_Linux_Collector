@@ -19,10 +19,8 @@ do
 	while read line
         do
             if [ ! -z "$line" ]; then
-		    tmp=$(jq --arg counter $COUNTER --arg line "$line" '.command_history['$counter'].Commands += [$line]' $outfile) && echo -E $tmp > $outfile
-		    #cmd=$($line | sed 's/[^[:print:]]//g;s/\\/\\\\/g;s/\"/\\"/g')
-	            #echo \"${line//\"/\\\"}\",
-                fi
+                tmp=$(jq --arg counter $COUNTER --arg line "$line" '.command_history['$counter'].Commands += [$line]' $outfile) && echo -E $tmp > $outfile
+            fi
         done < $outputpath$X/bash_history
 	
 	((COUNTER++))

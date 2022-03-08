@@ -81,7 +81,7 @@ if [[ -n $homepaths ]]; then
         			echo "{\"Firefox Permissions\": " >> $output_path/permissions.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getpermissions}," >> $output_path/permissions.json
 				tmp_permissions=$(sed '$ s/.$//' $output_path/permissions.json)
-        			echo "$tmp_permissions,\"metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/permissions.json
+        			echo "$tmp_permissions,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/permissions.json
 			fi
 		fi
 
@@ -94,7 +94,7 @@ if [[ -n $homepaths ]]; then
 		        	echo "{\"Firefox Webappsstore\": " >>  $output_path/webappsstore.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getwebappsstore}," >> $output_path/webappsstore.json
 				tmp_webappsstore=$(sed '$ s/.$//' $output_path/webappsstore.json)
-	        		echo "$tmp_webappsstore,\"metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/webappsstore.json
+	        		echo "$tmp_webappsstore,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/webappsstore.json
 			fi
 		fi
 	done

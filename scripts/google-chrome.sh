@@ -30,7 +30,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Chrome History\": " >> $output_path/history.json
 				echo "{\"File\": \"$filepath\", \"Data\": $gethistory}," >> $output_path/history.json
 				tmp_history=$(sed '$ s/.$//' $output_path/history.json)
-				echo "$tmp_history,\"metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/history.json
+				echo "$tmp_history,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/history.json
 			fi
 
 			getdownloads=$(./tools/sqlite3 --json ${filepath} "Select current_path, target_path, datetime(start_time/1e6-11644473600,'unixepoch','utc') AS start_time, received_bytes, total_bytes, state, danger_type, interrupt_reason, hash, datetime(end_time/1e6-11644473600,'unixepoch','utc') AS end_time, opened, datetime(last_access_time/1e6-11644473600,'unixepoch','utc') AS last_access_time, transient, referrer, site_url, tab_url, tab_referrer_url, http_method,by_ext_id, by_ext_name, etag, last_modified, mime_type, original_mime_type FROM downloads")
@@ -38,7 +38,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Chrome Downloads\": " >> $output_path/downloads.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getdownloads}," >> $output_path/downloads.json
 				tmp_downloads=$(sed '$ s/.$//' $output_path/downloads.json)
-				echo "$tmp_downloads,\"metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/downloads.json
+				echo "$tmp_downloads,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/downloads.json
 			fi
 		fi
 
@@ -53,7 +53,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Chrome Cookies\": " >> $output_path/cookies.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getcookies}," >> $output_path/cookies.json
 				tmp_history=$(sed '$ s/.$//' $output_path/cookies.json)
-				echo "$tmp_history,\"metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/cookies.json
+				echo "$tmp_history,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/cookies.json
 			fi
 		fi
 
