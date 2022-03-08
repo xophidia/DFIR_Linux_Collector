@@ -31,7 +31,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Firefox History\": " >> $output_path/history.json
 				echo "{\"File\": \"$filepath\", \"Data\": $gethistory}," >> $output_path/history.json
 				tmp_history=$(sed '$ s/.$//' $output_path/history.json)
-				echo "$tmp_history,\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/history.json
+				echo "$tmp_history,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/history.json
 			fi
 	# Downloads
 
@@ -40,7 +40,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Firefox Downloads\": " >> $output_path/downloads.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getdownloads}," >> $output_path/downloads.json
 				tmp_downloads=$(sed '$ s/.$//' $output_path/downloads.json)
-				echo "$tmp_downloads,\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/downloads.json
+				echo "$tmp_downloads,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/downloads.json
 			fi
 		fi
 	#Cookies
@@ -51,7 +51,7 @@ if [[ -n $homepaths ]]; then
 				echo "{\"Firefox Cookies\": " >> $output_path/cookies.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getcookies}," >> $output_path/cookies.json
 				tmp_cookies=$(sed '$ s/.$//' $output_path/cookies.json)
-	        		echo "$tmp_cookies,\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/cookies.json
+	        		echo "$tmp_cookies,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/cookies.json
 			fi
 		fi
 
@@ -69,7 +69,7 @@ if [[ -n $homepaths ]]; then
 		        	echo "{\"Firefox FormHistory\": " >> $output_path/formhistory.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getformhistory}," >> $output_path/formhistory.json
 				tmp_formhistory=$(sed '$ s/.$//' $output_path/formhistory.json)
-        			echo "$tmp_formhistory,\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/formhistory.json
+        			echo "$tmp_formhistory,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/formhistory.json
 			fi
 		fi
 	
@@ -81,7 +81,7 @@ if [[ -n $homepaths ]]; then
         			echo "{\"Firefox Permissions\": " >> $output_path/permissions.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getpermissions}," >> $output_path/permissions.json
 				tmp_permissions=$(sed '$ s/.$//' $output_path/permissions.json)
-        			echo "$tmp_permissions,\"Metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/permissions.json
+        			echo "$tmp_permissions,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/permissions.json
 			fi
 		fi
 
@@ -94,7 +94,7 @@ if [[ -n $homepaths ]]; then
 		        	echo "{\"Firefox Webappsstore\": " >>  $output_path/webappsstore.json
 				echo "{\"File\": \"$filepath\", \"Data\": $getwebappsstore}," >> $output_path/webappsstore.json
 				tmp_webappsstore=$(sed '$ s/.$//' $output_path/webappsstore.json)
-	        		echo "$tmp_webappsstore,\"Metadata\": { \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/webappsstore.json
+	        		echo "$tmp_webappsstore,\"metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}" > $output_path/webappsstore.json
 			fi
 		fi
 	done

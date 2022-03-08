@@ -1,8 +1,29 @@
 #!/bin/bash
 
+outputpath="$OUTPUT/Git"
+outfile="$outputpath/git.json"
 
-for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
+mkdir $outputpath
+
+echo '{ "gitconfig": [],"metadata": { "CaseNumber": "'$caseNumber'", "Description" : "'$desc'", "Username": "'$user'", "Hostname": "'$host'"}}' > $outfile
+
+COUNTER=0
+
+for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq);
+do
     if [ -s "${X}/.gitconfig" ]; then
-        more ${X}/.gitconfig | awk '{print $3}' | awk '{print}' ORS=' ' | awk 'BEGIN{print "{ \"gitconfig\" : ["} {print "{\"email\": \"",$1,"\", \"user\": \"",$2,"\"},"} END{print "]}"} ENDFILE{print "{\"email\": \"",$1,"\", \"user\": \"",$2,"\"}"}' | jq 'del(.gitconfig[-1:])' |  jq --arg l_user $user --arg l_host $host --arg l_caseNumber $caseNumber --arg l_desc $desc '. + {metadata: { "Case Number":  ($l_caseNumber), "Description" : ($l_desc), "Username": ($l_user), "Hostname": ($l_host) } }' >> $OUTPUT/user_gitconfig.json
+	mkdir -p $outputpath${X}
+        cp ${X}/.gitconfig $outputpath${X}/gitconfig
+	tmp=$(jq  '.gitconfig += [{"File": "'${X}'/.gitconfig","data" : []}]' $outfile) && echo $tmp > $outfile
+	
+	while read line
+        do
+            if [ ! -z "$line" ]; then
+                tmp=$(jq --arg counter $COUNTER --arg line "$line" '.gitconfig['$counter'].data += [$line]' $outfile) && echo -E $tmp > $outfile
+            fi
+        done < $outputpath$X/gitconfig
+	
+	((COUNTER++))
     fi
 done
+

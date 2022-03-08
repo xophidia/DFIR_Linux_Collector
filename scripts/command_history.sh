@@ -5,45 +5,49 @@ outfile="$outputpath/commands_history.json"
 historyfiles=( ".bash_history" ".zsh_history")
 mkdir $outputpath
 
-echo "{\"Command History\":[ " >> $outfile
-for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq); do
+echo '{ "command_history": [],"metadata": { "CaseNumber": "'$caseNumber'", "Description" : "'$desc'", "Username": "'$user'", "Hostname": "'$host'"}}' > $outfile
+
+COUNTER=0
+for X in $(cut -f6 -d ':' /etc/passwd |sort |uniq);
+do
+    #bash_history
     if [ -s "${X}/.bash_history" ] ; then
 	mkdir -p $outputpath${X}
         cp ${X}/.bash_history $outputpath${X}/bash_history
-	echo "{\"File\": \"$X/.bash_history\"," >> $outfile
-	echo "\"Commands\" : [" >> $outfile
-	#Delete non printable caracters
-        sed 's/[^[:print:]]//g;s/\\/\\\\/g;s/\"/\\"/g' $outputpath$X/bash_history > $outputpath$X/tmp_bash_history
+	tmp=$(jq  '.command_history += [{"File": "'${X}'/.bash_history","Commands" : []}]' $outfile) && echo $tmp > $outfile
 	
-	while read line 
-	do
-	    if [ ! -z "$line" ]; then
-		echo \"${line//\"/\\\"}\", >> $outfile
-		fi
-	    done < $outputpath${X}/tmp_bash_history
-	    tmp_history=$(sed '$ s/.$//' $outfile)
-	    echo $tmp_history > $outfile
-	    echo "]}," >> $outfile
-	    rm -f $outputpath$X/tmp_bash_history
-    fi
-    if [ -s "${X}/.zsh_history" ]; then
-	mkdir -p $outputpath${X}
-        cp ${X}/.zsh_history $outputpath$X/zsh_history
-	echo "{\"File\": \"$X/.zsh_history\"," >> $outfile
-	echo "\"Commands\" : [" >> $outfile
-	#Delete non printable caracters
-        sed "s/[^[:print:]]//g" $outputpath$X/zsh_history > $outputpath$X/tmp_zsh_history
-	while read line 
-	do
-	if [ ! -z "$line" ]; then
-	    echo \"${line//\"/\\\"}\", >> $outfile
-	fi
-	done < ${X}/.zsh_history
-	tmp_history=$(sed '$ s/.$//' $outfile)
-	echo $tmp_history > $outfile
-	echo "]}," >> $outfile
-	rm -f $outputpath$X/tmp_zsh_history
+	while read line
+        do
+            if [ ! -z "$line" ]; then
+                tmp=$(jq --arg counter $COUNTER --arg line "$line" '.command_history['$counter'].Commands += [$line]' $outfile) && echo -E $tmp > $outfile
+            fi
+        done < $outputpath$X/bash_history
+	
+	((COUNTER++))
     fi
 done
-        echo "{\"Metadata\": { \"Case Number\": \"$caseNumber\", \"Description\" : \"$desc\", \"Username\": \"$user\", \"Hostname\": \"$host\" }}]}" >> $outfile
 
+	
+
+        #Delete non printable caracters, escape special caracters
+        #sed 's/[^[:print:]]//g' $outputpath$X/bash_history > $outputpath$X/tmp_bash_history
+	
+	#while read line
+        #do
+        #    if [ ! -z "$line" ]; then
+        #        #echo $line
+#		cmd=$($line | sed 's/[^[:print:]]//g;s/\\/\\\\/g;s/\"/\\"/g')
+#                #echo $cmd
+#                echo \"${line//\"/\\\"}\",
+#                echo "===="
+#                fi
+#        done < $outputpath$X/tmp_bash_history
+
+
+	
+	#tmp_history=$(sed '$ s/.$//' $outfile)
+	#echo $tmp_history > $outfile
+	#echo "]}," >> $outfile
+	#rm -f $outputpath$X/tmp_bash_history
+    #fi
+#done
