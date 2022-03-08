@@ -168,7 +168,7 @@ Uncompressing orc  100%
 
 | Command / file | Json | Text | Raw |
 | --- | --- | --- | --- |
-| trash | --- | --- | --- |
+| trash | --- | --- | :heavy_check_mark: |
 
 :radio_button: Files
 
