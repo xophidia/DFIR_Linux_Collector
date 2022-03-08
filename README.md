@@ -17,8 +17,9 @@ Stand-alone collecting tools for Gnu/Linux
 | --- | --- | --- | --- | ---| 
 | Ubuntu | 12 - 20 | :heavy_check_mark: |  --- | --- |
 | Debian | > 8 | :heavy_check_mark: |  --- | --- |
-| Fedora | 30| :heavy_check_mark: |  --- | --- |
-| CentOS | 7| :heavy_check_mark: |  --- | --- |
+| Fedora | 30 | :heavy_check_mark: |  --- | --- |
+| CentOS | 7 | :heavy_check_mark: |  --- | --- |
+| CentOS | 6 | --- | :heavy_multiplication_x: | Kernel too old |
 
 The other distributions are not yet tested, still in progress ...
 
@@ -160,14 +161,14 @@ Uncompressing orc  100%
 | Command / file | Json | Text | Raw |
 | --- | --- | --- | --- |
 | .gitconfig | :heavy_check_mark: | --- | --- |
-| .command_history (bash + zsh) | :heavy_check_mark: | --- | --- |
+| .command_history (bash + zsh) | :heavy_check_mark: | --- | :heavy_check_mark: |
 | .viminfo | --- | :heavy_check_mark: | --- |
 
 :radio_button: Desktop
 
 | Command / file | Json | Text | Raw |
 | --- | --- | --- | --- |
-| trash | --- | --- | --- |
+| trash | --- | --- | :heavy_check_mark: |
 
 :radio_button: Files
 
