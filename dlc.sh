@@ -26,11 +26,19 @@ log_fedora=(program.log storage.log yum.log syslog)
 action=(c_ssh firefox c_git chromium google-chrome command_history vim trash frequent_apps)
 
 # Set colors
+white=$(tput setaf 7)
+white_background=$(tput setab 7)
+black=$(tput setaf 0)
+blue=$(tput setaf 4)
+blue_background=$(tput setab 4)
 yellow=$(tput setaf 3)
+yellow_background=$(tput setab 3)
 green=$(tput setaf 2)
+green_background=$(tput setab 2)
 red=$(tput setaf 1)
+red_background=$(tput setab 1)
 normal=$(tput sgr0)
-
+bold=$(tput bold)
 
 function banner()
 {
@@ -403,26 +411,32 @@ export desc="$desc"
 export caseNumber="$caseNumber"
 
 echo ""
-echo "==========================="
+echo "${white_background}${black}==========================="
 echo "Please select collect mode:"
 echo "==========================="
-PS3="Choose an option [1-4]:  "
+PS3="Choose an option [1-4]:${normal}  "
 options=("Light" "Medium (Light mode + File Artifacts)" "Full (Medium mode + Memory Dump)" "Quit")
 select opt in "${options[@]}"
 do
     case $opt in
         "Light")
-            echo "Light mode selected"
+	    echo ""
+            echo "${blue_background}${bold}>>>>>>>> Light mode selected <<<<<<<<${normal}"
+	    echo ""
 	    collect list_method_light
 	    break
             ;;
         "Medium (Light mode + File Artifacts)")
-            echo "Medium mode selected"
+	    echo ""
+            echo "${yellow_background}${bold}>>>>>>>> Medium mode selected <<<<<<<<${normal}"
+	    echo ""
 	    collect list_method_medium
 	    break
             ;;
         "Full (Medium mode + Memory Dump)")
-            echo "Full mode selected"
+	    echo ""
+            echo "${red_background}${bold}>>>>>>>> Full mode selected <<<<<<<<${normal}"
+	    echo ""
 	    collect list_method_full
 	    break
             ;;
@@ -430,7 +444,7 @@ do
 	    echo "${red}Bye!${normal}"	
 	    exit 0
             ;;	    
-        *) echo "${red}Invalid option, please retry! $REPLY${normal}";;
+        *) echo "${red_background}Invalid option, please retry! $REPLY${normal}";;
     esac
 done
 
@@ -441,7 +455,8 @@ runtime=$((end-start))
 
 
 echo ""
-echo "##################################"
-echo "Collect completed in $((runtime / 60))min $((runtime % 60))sec"
-echo "##################################"
+echo "#################################"
+echo "${green}Collect completed in $((runtime / 60))min $((runtime % 60))sec${normal}"
+echo "#################################"
+echo ""
 
