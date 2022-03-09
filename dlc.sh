@@ -348,7 +348,7 @@ function dump_ram()
     echo "
  
     Dump RAM"	
-    ./tools/avml-minimal $OUTPUT/dump_ram.raw
+    ./tools/avml-minimal $OUTPUT/memory_dump.raw
     verif $? "RAM"
 }
 
