@@ -7,7 +7,7 @@ Stand-alone collecting tools for Gnu/Linux
   - all binaries are included in the executable
 - Export in json format (log) / raw (dump ram) and Text format
 - Dump ram with avml (ref to compatilibilty https://github.com/microsoft/avml#tested-distributions)
-- The result is a compressed archive
+- The result is a compressed archive and a checksum file
 
 ## Compatibility
 
