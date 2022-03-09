@@ -41,3 +41,11 @@ echo ""
 echo "Archive creation ..."
 
 tar -czvf $USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`.tgz output/
+
+echo ""
+echo "Making hashes ..."
+echo "MD5"
+echo "MD5 => $(md5sum "$USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`.tgz" | cut -f 1 -d " ")" >> $USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`_Checksums.txt
+echo "SHA1 => $(sha1sum "$USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`.tgz" | cut -f 1 -d " ")" >> $USER_PWD/DLC_Collect-$HOSTNAME-`date +%F`_Checksums.txt
+
+
