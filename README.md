@@ -1,63 +1,62 @@
 # DFIR_Linux_Collector
 ![GitHub last commit](https://img.shields.io/github/last-commit/xophidia/DFIR_Linux_Collector) ![GitHub release-date](https://img.shields.io/github/release-date/xophidia/DFIR_Linux_Collector)
 
-Outil de collecte autonome pour Gnu/Linux — **branche `feature/yaml-rules`**
-
-- Très faible impact sur la machine cible
-- N'utilise aucun binaire de l'hôte (anti-hooking)
-  - tous les binaires nécessaires sont embarqués dans l'exécutable
-- Export au format JSON / texte / raw (dump RAM)
-- Dump RAM avec AVML (compatibilité : https://github.com/microsoft/avml#tested-distributions)
-- Livre une archive compressée + fichier de checksums
+Stand-alone collecting tools for GNU/Linux
+- Very low impact on the host
+- No use of host binaries (anti hooking)
+  - all binaries are included in the executable
+- Export in JSON format (logs) / raw (RAM dump) and text format
+- RAM dump with AVML (ref to compatibility https://github.com/microsoft/avml#tested-distributions)
+- The result is a compressed archive and a checksum file
 
 ---
 
-## Nouvelle architecture (branche feature/yaml-rules)
+## Architecture
 
 ```
 DFIR_Linux_Collector/
-├── dlc.sh              → Moteur générique (~290 lignes)
-├── rules.json          → Toutes les règles de collecte (YAML-like JSON)
-├── scripts/            → Scripts externes (firefox, chrome, ssh, etc.)
-├── tools/              → Binaires embarqués (avml, sqlite3)
-├── bootstrap.sh        → Lanceur standalone
-└── Makefile            → Build de l'archive makeself
+├── dlc.sh              → Generic engine (~290 lines)
+├── rules.json          → Collection rules (YAML-like JSON)
+├── scripts/            → External scripts (firefox, chrome, ssh, etc.)
+├── tools/              → Bundled binaries (avml, sqlite3)
+├── bootstrap.sh        → Standalone launcher
+└── Makefile            → Build makeself archive
 ```
 
-### Principe de fonctionnement
+### How it works
 
-1. `dlc.sh` lit `rules.json` via `jq` (embarqué)
-2. L'utilisateur choisit un mode (Light / Medium / Full)
-3. Le moteur itère sur les catégories du mode sélectionné
-4. Chaque commande est exécutée, formatée en JSON, enrichie des métadonnées
-5. Les fonctions complexes (antivirus, kernel, RAM, etc.) restent en bash
-6. Les scripts externes (navigateurs, SSH, etc.) sont appelés directement
+1. `dlc.sh` reads `rules.json` via bundled `jq`
+2. User selects a mode (Light / Medium / Full)
+3. Engine iterates over categories for the selected mode
+4. Each command is executed, formatted to JSON, enriched with metadata
+5. Complex functions (antivirus, kernel, RAM, etc.) remain in bash
+6. External scripts (browsers, SSH, etc.) are called directly
 
-### Formats de règles supportés
+### Supported rule formats
 
-| Format | Description | Exemple |
+| Format | Description | Example |
 |---|---|---|
-| `wrap` | Sortie texte → encapsulée dans `{"cle": "valeur"}` | `uname -a`, `uptime` |
-| `jsonl` | Sortie → transformée en JSONL par un formateur awk → tableau | `env`, `lsmod`, `ps` |
-| `raw` | Copie brute dans un fichier texte | `lsof` |
-| `function` | Fonction bash dédiée (logique complexe) | `antivirus`, `dump_ram` |
-| `scripts` | Appel de scripts externes | `firefox.sh`, `c_ssh.sh` |
+| `wrap` | Text output → wrapped in `{"key": "value"}` | `uname -a`, `uptime` |
+| `jsonl` | Output → JSONL via awk formatter → array | `env`, `lsmod`, `ps` |
+| `raw` | Raw copy to text file | `lsof` |
+| `function` | Dedicated bash function (complex logic) | `antivirus`, `dump_ram` |
+| `scripts` | External scripts call | `firefox.sh`, `c_ssh.sh` |
 
-### Ajouter une nouvelle règle simple
+### Adding a new rule
 
-Il suffit d'ajouter un bloc dans `rules.json`, catégorie `generic`, `network` ou `process` :
+Add a block to `rules.json` in category `generic`, `network` or `process`:
 
 ```json
 { "name": "hostname", "cmd": "hostname", "output": "gen_hostname.json", "format": "wrap", "key": "hostname" }
 ```
 
-Pour une règle avec formatage tableau (awk) :
+For tabular data requiring awk formatting:
 
 ```json
 { "name": "timedatectl", "cmd": "timedatectl", "output": "gen_timedate.json", "format": "jsonl", "formatter": "fmt_timedate", "key": "timedate" }
 ```
 
-Il faut alors créer la fonction `fmt_timedate` dans `dlc.sh` :
+Then create the `fmt_timedate` function in `dlc.sh`:
 
 ```bash
 function fmt_timedate() {
@@ -65,62 +64,41 @@ function fmt_timedate() {
 }
 ```
 
-### Modes de collecte
+### Collection modes
 
-| Mode | Catégories incluses |
+| Mode | Included categories |
 |---|---|
 | **Light** | generic, network, process, user, artefactsDistribution, exportRawKernelArtefacts, antivirus |
-| **Medium** | Light + interestFile (MD5, permissions, timeline) |
+| **Medium** | Light + interestFile (MD5 hashes, SUID/SGID, timeline) |
 | **Full** | Medium + dump_ram (AVML) |
 
-Définis dans `rules.json` — modification sans toucher au code.
+Defined in `rules.json` — no code modification required.
 
 ---
 
-## Compatibilité
+## Compatibility
 
-| Distribution | Version | OK | Erreur | Commentaires |
+| Distribution | Version | OK | Error | Comments |
 |---|---|---|---|---|
 | Ubuntu | 12 - 20 | :heavy_check_mark: | --- | --- |
 | Debian | > 8 | :heavy_check_mark: | --- | --- |
+| Debian | 13 (Trixie) | :heavy_check_mark: | --- | --- |
 | Fedora | 30 | :heavy_check_mark: | --- | --- |
 | CentOS | 7 | :heavy_check_mark: | --- | --- |
-| CentOS | 6 | --- | :heavy_multiplication_x: | Kernel trop ancien |
+| CentOS | 6 | --- | :heavy_multiplication_x: | Kernel too old |
 
-Les autres distributions n'ont pas encore été testées.
+Other distributions not yet tested, still in progress ...
 
 ---
 
-## Versions des composants embarqués
+## Bundled components versions
 
-### Versions actuelles (Makefile actuel)
-
-| Composant | Version | Date | État |
-|---|---|---|---|
-| Alpine Linux | **v3.10** | Oct 2019 | :warning: **EOL** (plus de mises à jour de sécurité) |
-| apk-tools-static | **2.10.8-r0** | 2019 | :warning: Obsolète |
-| busybox | **1.34.1** | Dec 2021 | :warning: Obsolète |
-| jq | **1.6** | 2018 | OK (stable mais ancien) |
-
-### Versions disponibles (mise à jour recommandée)
-
-| Composant | Dernière stable | Lien |
-|---|---|---|
-| Alpine Linux | **v3.23.4** (15 Avr 2026) | https://alpinelinux.org |
-| apk-tools-static | **3.0.6-r0** | https://pkgs.alpinelinux.org/package/edge/main/x86_64/apk-tools-static |
-| busybox | **1.37.0** (27 Sep 2024) | https://busybox.net/downloads/busybox-1.37.0.tar.bz2 |
-| jq | **1.8.1-r0** | Inclus dans Alpine v3.23 |
-
-**Mise à jour recommandée dans le Makefile :**
-
-```makefile
-ALPINE_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.23
-APK=http://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/apk-tools-static-3.0.5-r0.apk
-```
-
-Et remplacer `busybox-1_34_1.zip` par `busybox-1.37.0.tar.bz2`.
-
-:warning: **Important** : Alpine v3.10 → v3.23 nécessite de tester la compatibilité des paquets (`jq`, `lsof`, `findutils`, etc.). Les noms de paquets peuvent avoir changé.
+| Component | Version |
+|---|---|
+| Alpine Linux | **v3.23.4** (Apr 2026) |
+| busybox | **1.37.0** (static) |
+| apk-tools-static | **3.0.6-r0** |
+| jq | **1.8.1-r0** |
 
 ---
 
@@ -128,14 +106,13 @@ Et remplacer `busybox-1_34_1.zip` par `busybox-1.37.0.tar.bz2`.
 
 ![](dlc.gif)
 
-```bash
+```
 git clone https://github.com/xophidia/DFIR_Linux_Collector.git
 cd DFIR_Linux_Collector
-git checkout feature/yaml-rules    # ← branche avec la nouvelle archi
 ./setup.sh
 ```
 
-```bash
+```
 sudo ./DFIR_linux_collector
 Verifying archive integrity...  100%   MD5 checksums are OK. All good.
 Uncompressing orc  100%
@@ -163,11 +140,11 @@ Uncompressing orc  100%
 
 ---
 
-## Artefacts collectés
+## Collected artifacts
 
 ### Generic
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | env | :heavy_check_mark: | --- | --- |
 | uptime | :heavy_check_mark: | --- | --- |
@@ -186,28 +163,28 @@ Uncompressing orc  100%
 
 ### SSH
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | authorized_keys | :heavy_check_mark: | --- | --- |
 | known_hosts | :heavy_check_mark: | --- | --- |
 
 ### Network
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | ip | :heavy_check_mark: | --- | --- |
 | netstat | :heavy_check_mark: | --- | --- |
 | arp | :heavy_check_mark: | --- | --- |
 
-### Processus
+### Process
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | ps | :heavy_check_mark: | --- | --- |
 
 ### Browser
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | Firefox | :heavy_check_mark: | --- | --- |
 | Google Chrome | :heavy_check_mark: | --- | --- |
@@ -215,14 +192,14 @@ Uncompressing orc  100%
 
 ### Logs
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | auth.log | --- | :heavy_check_mark: | --- |
 | syslog | :heavy_check_mark: | --- | --- |
 
 ### Home
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | .gitconfig | :heavy_check_mark: | --- | --- |
 | .command_history (bash + zsh) | :heavy_check_mark: | --- | :heavy_check_mark: |
@@ -230,22 +207,22 @@ Uncompressing orc  100%
 
 ### Desktop
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
-| corbeille (trash) | --- | --- | :heavy_check_mark: |
-| applications fréquentes (GNOME) | :heavy_check_mark: | --- | --- |
+| trash | --- | --- | :heavy_check_mark: |
+| frequent apps (GNOME) | :heavy_check_mark: | --- | --- |
 
-### Fichiers
+### Files
 
-| Commande / Fichier | Json | Texte | Raw | Csv |
+| Command / File | Json | Text | Raw | Csv |
 |---|---|---|---|---|
-| hashes MD5 | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
-| permissions (SUID/SGID) | :heavy_check_mark: | --- | --- | --- |
+| MD5 hashes | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
+| SUID/SGID permissions | :heavy_check_mark: | --- | --- | --- |
 | timeline | --- | --- | --- | :heavy_check_mark: |
 
 ### Dump
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | AVML (RAM) | --- | --- | :heavy_check_mark: |
 | LiME | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: |
@@ -254,31 +231,9 @@ Uncompressing orc  100%
 
 ### Antivirus
 
-| Commande / Fichier | Json | Texte | Raw |
+| Command / File | Json | Text | Raw |
 |---|---|---|---|
 | ClamAV | :heavy_check_mark: | --- | --- |
-
----
-
-## Développement avec Git
-
-```bash
-# Créer une branche pour une nouvelle fonctionnalité
-git checkout main
-git checkout -b feature/ma-fonctionnalite
-
-# Après modifications
-git add rules.json dlc.sh
-git commit -m "feat: ajout de la collecte ..."
-
-# Pousser la branche
-git push -u origin feature/ma-fonctionnalite
-
-# Fusionner dans main après validation
-git checkout main
-git merge feature/ma-fonctionnalite
-git push origin main
-```
 
 ---
 
@@ -286,7 +241,7 @@ git push origin main
 
 GNU Lesser General Public License
 
-## Contributeurs
+## Contributors
 
 :godmode: xophidia https://github.com/xophidia  
 :godmode: Dupss https://github.com/dupss  
