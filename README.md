@@ -160,6 +160,9 @@ Uncompressing orc  100%
 | mount | ✓ | --- | --- |
 | fstab | ✓ | --- | --- |
 | last | ✓ | --- | --- |
+| timedatectl | --- | ✓ | --- |
+| lastlog | ✓ | --- | --- |
+| hostname | ✓ | --- | --- |
 
 ### SSH
 
@@ -175,12 +178,16 @@ Uncompressing orc  100%
 | ip | ✓ | --- | --- |
 | netstat | ✓ | --- | --- |
 | arp | ✓ | --- | --- |
+| ss (sockets) | ✓ | --- | --- |
+| lsof -i | --- | ✓ | --- |
 
 ### Process
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
 | ps | ✓ | --- | --- |
+| docker ps | ✓ | --- | --- |
+| systemctl services | ✓ | --- | --- |
 
 ### Browser
 

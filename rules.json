@@ -33,7 +33,10 @@
         { "name": "mount", "cmd": "mount 2>/dev/null", "output": "gen_mount.json", "format": "jsonl", "formatter": "fmt_mount", "key": "mount" },
         { "name": "sudoers", "cmd": "cat /etc/sudoers", "output": "gen_sudoers.json", "format": "jsonl", "formatter": "fmt_sudoers", "key": "sudoers" },
         { "name": "fstab", "cmd": "cat /etc/fstab", "output": "gen_fstab.json", "format": "jsonl", "formatter": "fmt_fstab", "key": "fstab" },
-        { "name": "last", "cmd": "last", "output": "gen_last.json", "format": "jsonl", "formatter": "fmt_last", "key": "last" }
+        { "name": "last", "cmd": "last", "output": "gen_last.json", "format": "jsonl", "formatter": "fmt_last", "key": "last" },
+        { "name": "timedatectl", "cmd": "timedatectl 2>/dev/null", "output": "gen_timedatectl.json", "format": "raw" },
+        { "name": "lastlog", "cmd": "lastlog 2>/dev/null", "output": "gen_lastlog.json", "format": "jsonl", "formatter": "fmt_lastlog", "key": "lastlog" },
+        { "name": "hostname", "cmd": "hostname 2>/dev/null", "output": "gen_hostname.json", "format": "wrap", "key": "hostname" }
       ]
     },
     "network": {
@@ -42,14 +45,18 @@
       "commands": [
         { "name": "ip", "cmd": "ip -o addr list", "output": "network_ip.json", "format": "jsonl", "formatter": "fmt_ip", "key": "ip_info" },
         { "name": "netstat", "cmd": "netstat -r -n", "output": "network_netstat.json", "format": "jsonl", "formatter": "fmt_netstat", "key": "netstat" },
-        { "name": "arp", "cmd": "arp", "output": "network_arp.json", "format": "jsonl", "formatter": "fmt_arp", "key": "arp" }
+        { "name": "arp", "cmd": "arp", "output": "network_arp.json", "format": "jsonl", "formatter": "fmt_arp", "key": "arp" },
+        { "name": "ss", "cmd": "ss -tulpn 2>/dev/null", "output": "network_ss.json", "format": "jsonl", "formatter": "fmt_ss", "key": "sockets" },
+        { "name": "lsof-i", "cmd": "lsof -i 2>/dev/null", "output": "network_lsof.json", "format": "raw" }
       ]
     },
     "process": {
       "description": "Dump process artifacts",
       "type": "commands",
       "commands": [
-        { "name": "ps", "cmd": "ps -o user,group,pid,ppid,stat,args", "output": "processus_ps.json", "format": "jsonl", "formatter": "fmt_ps", "key": "ps" }
+        { "name": "ps", "cmd": "ps -o user,group,pid,ppid,stat,args", "output": "processus_ps.json", "format": "jsonl", "formatter": "fmt_ps", "key": "ps" },
+        { "name": "docker", "cmd": "docker ps -a 2>/dev/null", "output": "process_docker.json", "format": "jsonl", "formatter": "fmt_docker_ps", "key": "docker" },
+        { "name": "services", "cmd": "systemctl list-units --type=service --no-pager 2>/dev/null", "output": "process_services.json", "format": "jsonl", "formatter": "fmt_services", "key": "services" }
       ]
     },
     "user": {

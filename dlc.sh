@@ -129,6 +129,26 @@ function fmt_ip()
     jq -R 'capture("^[0-9]+: (?<ifname>[^[:space:]]+)[[:space:]]+inet (?<addr>[^[:space:]/]+)(/(?<masklen>[[:digit:]]+))?") // empty'
 }
 
+function fmt_lastlog()
+{
+    awk 'NR>1 && /^[a-zA-Z]/ {name=$1; port=$2; from=$3; $1=$2=$3=""; sub(/^[[:space:]]+/, ""); print "{\"user\": \""name"\", \"port\": \""port"\", \"from\": \""from"\", \"latest\": \""$0"\"}"}'
+}
+
+function fmt_ss()
+{
+    awk 'NR>1 {gsub(/.*:/, "", $4); gsub(/.*:/, "", $5); print "{\"netid\": \""$1"\", \"state\": \""$2"\", \"local_port\": \""$4"\", \"peer_port\": \""$5"\", \"process\": \""$6"\"}"}'
+}
+
+function fmt_docker_ps()
+{
+    awk 'NR>1 {print "{\"container\": \""$NF"\", \"id\": \""$1"\", \"image\": \""$2"\", \"status\": \""$(NF-1)"\"}"}'
+}
+
+function fmt_services()
+{
+    awk 'NR>1 && NF>0 {print "{\"unit\": \""$1"\", \"load\": \""$2"\", \"active\": \""$3"\", \"sub\": \""$4"\", \"description\": \""$0"\"}"}'
+}
+
 function interestFile()
 {
     echo "
