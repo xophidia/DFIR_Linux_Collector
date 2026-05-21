@@ -80,12 +80,12 @@ Defined in `rules.json` — no code modification required.
 
 | Distribution | Version | OK | Error | Comments |
 |---|---|---|---|---|
-| Ubuntu | 12 - 20 | :heavy_check_mark: | --- | --- |
-| Debian | > 8 | :heavy_check_mark: | --- | --- |
-| Debian | 13 (Trixie) | :heavy_check_mark: | --- | --- |
-| Fedora | 30 | :heavy_check_mark: | --- | --- |
-| CentOS | 7 | :heavy_check_mark: | --- | --- |
-| CentOS | 6 | --- | :heavy_multiplication_x: | Kernel too old |
+| Ubuntu | 12 - 20 | [success] | --- | --- |
+| Debian | > 8 | [success] | --- | --- |
+| Debian | 13 (Trixie) | [success] | --- | --- |
+| Fedora | 30 | [success] | --- | --- |
+| CentOS | 7 | [success] | --- | --- |
+| CentOS | 6 | --- | [failed] | Kernel too old |
 
 Other distributions not yet tested, still in progress ...
 
@@ -146,94 +146,94 @@ Uncompressing orc  100%
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| env | :heavy_check_mark: | --- | --- |
-| uptime | :heavy_check_mark: | --- | --- |
-| uname -a | :heavy_check_mark: | --- | --- |
-| lsmod | :heavy_check_mark: | --- | --- |
-| /etc/passwd | :heavy_check_mark: | --- | --- |
-| /etc/group | :heavy_check_mark: | --- | --- |
-| date | :heavy_check_mark: | --- | --- |
-| who | :heavy_check_mark: | --- | --- |
-| cpuinfo | :heavy_check_mark: | --- | --- |
-| lsof | --- | :heavy_check_mark: | --- |
-| sudoers | :heavy_check_mark: | --- | --- |
-| mount | :heavy_check_mark: | --- | --- |
-| fstab | :heavy_check_mark: | --- | --- |
-| last | :heavy_check_mark: | --- | --- |
+| env | [success] | --- | --- |
+| uptime | [success] | --- | --- |
+| uname -a | [success] | --- | --- |
+| lsmod | [success] | --- | --- |
+| /etc/passwd | [success] | --- | --- |
+| /etc/group | [success] | --- | --- |
+| date | [success] | --- | --- |
+| who | [success] | --- | --- |
+| cpuinfo | [success] | --- | --- |
+| lsof | --- | [success] | --- |
+| sudoers | [success] | --- | --- |
+| mount | [success] | --- | --- |
+| fstab | [success] | --- | --- |
+| last | [success] | --- | --- |
 
 ### SSH
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| authorized_keys | :heavy_check_mark: | --- | --- |
-| known_hosts | :heavy_check_mark: | --- | --- |
+| authorized_keys | [success] | --- | --- |
+| known_hosts | [success] | --- | --- |
 
 ### Network
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ip | :heavy_check_mark: | --- | --- |
-| netstat | :heavy_check_mark: | --- | --- |
-| arp | :heavy_check_mark: | --- | --- |
+| ip | [success] | --- | --- |
+| netstat | [success] | --- | --- |
+| arp | [success] | --- | --- |
 
 ### Process
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ps | :heavy_check_mark: | --- | --- |
+| ps | [success] | --- | --- |
 
 ### Browser
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| Firefox | :heavy_check_mark: | --- | --- |
-| Google Chrome | :heavy_check_mark: | --- | --- |
-| Chromium | :heavy_check_mark: | --- | --- |
+| Firefox | [success] | --- | --- |
+| Google Chrome | [success] | --- | --- |
+| Chromium | [success] | --- | --- |
 
 ### Logs
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| auth.log | --- | :heavy_check_mark: | --- |
-| syslog | :heavy_check_mark: | --- | --- |
+| auth.log | --- | [success] | --- |
+| syslog | [success] | --- | --- |
 
 ### Home
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| .gitconfig | :heavy_check_mark: | --- | --- |
-| .command_history (bash + zsh) | :heavy_check_mark: | --- | :heavy_check_mark: |
-| .viminfo | --- | :heavy_check_mark: | --- |
+| .gitconfig | [success] | --- | --- |
+| .command_history (bash + zsh) | [success] | --- | [success] |
+| .viminfo | --- | [success] | --- |
 
 ### Desktop
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| trash | --- | --- | :heavy_check_mark: |
-| frequent apps (GNOME) | :heavy_check_mark: | --- | --- |
+| trash | --- | --- | [success] |
+| frequent apps (GNOME) | [success] | --- | --- |
 
 ### Files
 
 | Command / File | Json | Text | Raw | Csv |
 |---|---|---|---|---|
-| MD5 hashes | :heavy_check_mark: | :heavy_check_mark: | --- | --- |
-| SUID/SGID permissions | :heavy_check_mark: | --- | --- | --- |
-| timeline | --- | --- | --- | :heavy_check_mark: |
+| MD5 hashes | [success] | [success] | --- | --- |
+| SUID/SGID permissions | [success] | --- | --- | --- |
+| timeline | --- | --- | --- | [success] |
 
 ### Dump
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| AVML (RAM) | --- | --- | :heavy_check_mark: |
-| LiME | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: |
-| /boot/System.map-$(uname -r) | --- | --- | :heavy_check_mark: |
-| /boot/vmlinuz | --- | --- | :heavy_check_mark: |
+| AVML (RAM) | --- | --- | [success] |
+| LiME | [failed] | [failed] | [failed] |
+| /boot/System.map-$(uname -r) | --- | --- | [success] |
+| /boot/vmlinuz | --- | --- | [success] |
 
 ### Antivirus
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ClamAV | :heavy_check_mark: | --- | --- |
+| ClamAV | [success] | --- | --- |
 
 ---
 
