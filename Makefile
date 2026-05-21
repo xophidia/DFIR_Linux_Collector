@@ -3,8 +3,7 @@ ALPINE_REPO=http://dl-cdn.alpinelinux.org/alpine/v3.23
 APK=http://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/apk-tools-static-3.0.6-r0.apk
 
 # Paquets installés via apk dans le chroot Alpine
-MAIN_PACKAGES=bash libgcc libstdc++ lsof musl iptables findutils audit-libs linux-pam sudo libcrypto3 openssl jq gawk ncurses net-tools grep
-COMMUNITY_PACKAGES=patchelf
+MAIN_PACKAGES=busybox bash libgcc libstdc++ lsof musl iptables findutils audit-libs linux-pam patchelf libcrypto3 openssl jq gawk ncurses net-tools grep
 
 all:	clean dlc package
 
@@ -15,7 +14,6 @@ dlc:
 	&& ./sbin/apk.static -X $(ALPINE_REPO)/main      -U --allow-untrusted -p ./ --initdb add busybox-static \
 	&& chroot ./ /bin/busybox.static --install \
 	&& ./sbin/apk.static -X $(ALPINE_REPO)/main      -U --allow-untrusted -p ./ add $(MAIN_PACKAGES) \
-	&& ./sbin/apk.static -X $(ALPINE_REPO)/community -U --allow-untrusted -p ./ add $(COMMUNITY_PACKAGES) \
 	&& cp ../bootstrap.sh ../dlc.sh ../rules.json ./ \
 	&& mkdir -p ../tools/ \
 	&& cp -r ../tools ./ \

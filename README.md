@@ -17,7 +17,7 @@ Stand-alone collecting tools for GNU/Linux
 DFIR_Linux_Collector/
 ├── dlc.sh              → Generic engine (~290 lines)
 ├── rules.json          → Collection rules (YAML-like JSON)
-├── scripts/            → External scripts (firefox, chrome, ssh, etc.)
+├── scripts/            → External scripts (firefox, chrome, ssh, zeitgeist, etc.)
 ├── tools/              → Bundled binaries (avml, sqlite3)
 ├── bootstrap.sh        → Standalone launcher
 └── Makefile            → Build makeself archive
@@ -94,11 +94,12 @@ Other distributions not yet tested, still in progress ...
 ## Bundled components versions
 
 | Component | Version |
-|---|---|
+|---|---|---|
 | Alpine Linux | **v3.23.4** (Apr 2026) |
 | busybox | **1.37.0** (static) |
 | apk-tools-static | **3.0.6-r0** |
 | jq | **1.8.1-r0** |
+| patchelf | **0.18.0-r0** |
 
 ---
 
@@ -192,10 +193,18 @@ Uncompressing orc  100%
 ### Browser
 
 | Command / File | Json | Text | Raw |
-|---|---|---|---|
+|---|---|---|---|---|
 | Firefox | ✓ | --- | --- |
 | Google Chrome | ✓ | --- | --- |
 | Chromium | ✓ | --- | --- |
+
+### Applications
+
+| Command / File | Json | Text | Raw |
+|---|---|---|---|---|
+| FileZilla (servers.xml, recentservers.xml) | ✓ | --- | ✓ |
+| Zeitgeist (last 200 activities) | ✓ | --- | --- |
+| Developer history (.mysql, .psql, .sqlite, .nano, .lesshst, .wget-hsts, .bashrc) | ✓ | --- | ✓ |
 
 ### Logs
 

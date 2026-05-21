@@ -62,7 +62,7 @@
     "user": {
       "description": "Dump user artifacts",
       "type": "scripts",
-      "scripts": ["c_ssh", "firefox", "c_git", "chromium", "google-chrome", "command_history", "vim", "trash", "frequent_apps"]
+      "scripts": ["c_ssh", "firefox", "c_git", "chromium", "google-chrome", "command_history", "vim", "trash", "frequent_apps", "zeitgeist", "filezilla", "developer_history"]
     },
     "antivirus": {
       "description": "Dump antivirus artifacts",
