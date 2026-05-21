@@ -1,5 +1,5 @@
 # DFIR_Linux_Collector
-![GitHub last commit](https://img.shields.io/github/last-commit/xophidia/DFIR_Linux_Collector) ![GitHub release-date](https://img.shields.io/github/release-date/xophidia/DFIR_Linux_Collector)
+![Last commit](https://img.shields.io/badge/last%20commit-2026-brightgreen) ![Release](https://img.shields.io/badge/release-2026-brightgreen)
 
 Stand-alone collecting tools for GNU/Linux
 - Very low impact on the host
