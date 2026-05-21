@@ -1,0 +1,86 @@
+{
+  "modes": {
+    "light": [
+      "generic", "network", "process", "user",
+      "artefactsDistribution", "exportRawKernelArtefacts", "antivirus"
+    ],
+    "medium": [
+      "generic", "network", "process", "user",
+      "artefactsDistribution", "exportRawKernelArtefacts", "antivirus",
+      "interestFile"
+    ],
+    "full": [
+      "generic", "network", "process", "user",
+      "artefactsDistribution", "exportRawKernelArtefacts", "antivirus",
+      "interestFile", "dump_ram"
+    ]
+  },
+  "categories": {
+    "generic": {
+      "description": "Dump generic artifacts",
+      "type": "commands",
+      "commands": [
+        { "name": "uname", "cmd": "uname -a", "output": "gen_uname.json", "format": "wrap", "key": "uname" },
+        { "name": "env", "cmd": "env", "output": "gen_env.json", "format": "jsonl", "formatter": "fmt_env", "key": "env" },
+        { "name": "uptime", "cmd": "uptime", "output": "gen_uptime.json", "format": "wrap", "key": "uptime" },
+        { "name": "lsmod", "cmd": "lsmod", "output": "gen_lsmod.json", "format": "jsonl", "formatter": "fmt_lsmod", "key": "lsmod" },
+        { "name": "passwd", "cmd": "cat /etc/passwd", "output": "gen_passwd.json", "format": "jsonl", "formatter": "fmt_passwd", "key": "pwd" },
+        { "name": "date", "cmd": "date", "output": "gen_date.json", "format": "wrap", "key": "date" },
+        { "name": "who", "cmd": "who", "output": "gen_who.json", "format": "wrap", "key": "who" },
+        { "name": "cpuinfo", "cmd": "cat /proc/cpuinfo", "output": "gen_cpuinfo.json", "format": "jsonl", "formatter": "fmt_cpuinfo", "key": "cpuinfo" },
+        { "name": "group", "cmd": "cat /etc/group", "output": "gen_group.json", "format": "jsonl", "formatter": "fmt_group", "key": "group" },
+        { "name": "lsof", "cmd": "lsof 2>/dev/null", "output": "gen_lsof", "format": "raw" },
+        { "name": "mount", "cmd": "mount 2>/dev/null", "output": "gen_mount.json", "format": "jsonl", "formatter": "fmt_mount", "key": "mount" },
+        { "name": "sudoers", "cmd": "cat /etc/sudoers", "output": "gen_sudoers.json", "format": "jsonl", "formatter": "fmt_sudoers", "key": "sudoers" },
+        { "name": "fstab", "cmd": "cat /etc/fstab", "output": "gen_fstab.json", "format": "jsonl", "formatter": "fmt_fstab", "key": "fstab" },
+        { "name": "last", "cmd": "last", "output": "gen_last.json", "format": "jsonl", "formatter": "fmt_last", "key": "last" }
+      ]
+    },
+    "network": {
+      "description": "Dump network artifacts",
+      "type": "commands",
+      "commands": [
+        { "name": "ip", "cmd": "ip -o addr list", "output": "network_ip.json", "format": "jsonl", "formatter": "fmt_ip", "key": "ip_info" },
+        { "name": "netstat", "cmd": "netstat -r -n", "output": "network_netstat.json", "format": "jsonl", "formatter": "fmt_netstat", "key": "netstat" },
+        { "name": "arp", "cmd": "arp", "output": "network_arp.json", "format": "jsonl", "formatter": "fmt_arp", "key": "arp" }
+      ]
+    },
+    "process": {
+      "description": "Dump process artifacts",
+      "type": "commands",
+      "commands": [
+        { "name": "ps", "cmd": "ps -o user,group,pid,ppid,stat,args", "output": "processus_ps.json", "format": "jsonl", "formatter": "fmt_ps", "key": "ps" }
+      ]
+    },
+    "user": {
+      "description": "Dump user artifacts",
+      "type": "scripts",
+      "scripts": ["c_ssh", "firefox", "c_git", "chromium", "google-chrome", "command_history", "vim", "trash", "frequent_apps"]
+    },
+    "antivirus": {
+      "description": "Dump antivirus artifacts",
+      "type": "function",
+      "function": "antivirus"
+    },
+    "artefactsDistribution": {
+      "description": "Dump artifacts per distribution",
+      "type": "function",
+      "function": "artefactsDistribution"
+    },
+    "exportRawKernelArtefacts": {
+      "description": "Export kernel artifacts",
+      "type": "function",
+      "function": "exportRawKernelArtefacts"
+    },
+    "interestFile": {
+      "description": "Dump file artifacts",
+      "type": "function",
+      "function": "interestFile"
+    },
+    "dump_ram": {
+      "description": "Dump RAM",
+      "type": "function",
+      "function": "dump_ram"
+    }
+  }
+}
