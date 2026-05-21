@@ -80,12 +80,12 @@ Defined in `rules.json` — no code modification required.
 
 | Distribution | Version | OK | Error | Comments |
 |---|---|---|---|---|
-| Ubuntu | 12 - 20 | [success] | --- | --- |
-| Debian | > 8 | [success] | --- | --- |
-| Debian | 13 (Trixie) | [success] | --- | --- |
-| Fedora | 30 | [success] | --- | --- |
-| CentOS | 7 | [success] | --- | --- |
-| CentOS | 6 | --- | [failed] | Kernel too old |
+| Ubuntu | 12 - 20 | ✓ | --- | --- |
+| Debian | > 8 | ✓ | --- | --- |
+| Debian | 13 (Trixie) | ✓ | --- | --- |
+| Fedora | 30 | ✓ | --- | --- |
+| CentOS | 7 | ✓ | --- | --- |
+| CentOS | 6 | --- | ✗ | Kernel too old |
 
 Other distributions not yet tested, still in progress ...
 
@@ -132,9 +132,9 @@ Uncompressing orc  100%
     Hostname : 10_01
 
     Dump generic artifacts
-    +  uname ....................[success]
-    +  env ......................[success]
-    +  uptime ...................[success]
+    +  uname ....................✓
+    +  env ......................✓
+    +  uptime ...................✓
     ...
 ```
 
@@ -146,94 +146,94 @@ Uncompressing orc  100%
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| env | [success] | --- | --- |
-| uptime | [success] | --- | --- |
-| uname -a | [success] | --- | --- |
-| lsmod | [success] | --- | --- |
-| /etc/passwd | [success] | --- | --- |
-| /etc/group | [success] | --- | --- |
-| date | [success] | --- | --- |
-| who | [success] | --- | --- |
-| cpuinfo | [success] | --- | --- |
-| lsof | --- | [success] | --- |
-| sudoers | [success] | --- | --- |
-| mount | [success] | --- | --- |
-| fstab | [success] | --- | --- |
-| last | [success] | --- | --- |
+| env | ✓ | --- | --- |
+| uptime | ✓ | --- | --- |
+| uname -a | ✓ | --- | --- |
+| lsmod | ✓ | --- | --- |
+| /etc/passwd | ✓ | --- | --- |
+| /etc/group | ✓ | --- | --- |
+| date | ✓ | --- | --- |
+| who | ✓ | --- | --- |
+| cpuinfo | ✓ | --- | --- |
+| lsof | --- | ✓ | --- |
+| sudoers | ✓ | --- | --- |
+| mount | ✓ | --- | --- |
+| fstab | ✓ | --- | --- |
+| last | ✓ | --- | --- |
 
 ### SSH
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| authorized_keys | [success] | --- | --- |
-| known_hosts | [success] | --- | --- |
+| authorized_keys | ✓ | --- | --- |
+| known_hosts | ✓ | --- | --- |
 
 ### Network
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ip | [success] | --- | --- |
-| netstat | [success] | --- | --- |
-| arp | [success] | --- | --- |
+| ip | ✓ | --- | --- |
+| netstat | ✓ | --- | --- |
+| arp | ✓ | --- | --- |
 
 ### Process
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ps | [success] | --- | --- |
+| ps | ✓ | --- | --- |
 
 ### Browser
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| Firefox | [success] | --- | --- |
-| Google Chrome | [success] | --- | --- |
-| Chromium | [success] | --- | --- |
+| Firefox | ✓ | --- | --- |
+| Google Chrome | ✓ | --- | --- |
+| Chromium | ✓ | --- | --- |
 
 ### Logs
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| auth.log | --- | [success] | --- |
-| syslog | [success] | --- | --- |
+| auth.log | --- | ✓ | --- |
+| syslog | ✓ | --- | --- |
 
 ### Home
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| .gitconfig | [success] | --- | --- |
-| .command_history (bash + zsh) | [success] | --- | [success] |
-| .viminfo | --- | [success] | --- |
+| .gitconfig | ✓ | --- | --- |
+| .command_history (bash + zsh) | ✓ | --- | ✓ |
+| .viminfo | --- | ✓ | --- |
 
 ### Desktop
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| trash | --- | --- | [success] |
-| frequent apps (GNOME) | [success] | --- | --- |
+| trash | --- | --- | ✓ |
+| frequent apps (GNOME) | ✓ | --- | --- |
 
 ### Files
 
 | Command / File | Json | Text | Raw | Csv |
 |---|---|---|---|---|
-| MD5 hashes | [success] | [success] | --- | --- |
-| SUID/SGID permissions | [success] | --- | --- | --- |
-| timeline | --- | --- | --- | [success] |
+| MD5 hashes | ✓ | ✓ | --- | --- |
+| SUID/SGID permissions | ✓ | --- | --- | --- |
+| timeline | --- | --- | --- | ✓ |
 
 ### Dump
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| AVML (RAM) | --- | --- | [success] |
-| LiME | [failed] | [failed] | [failed] |
-| /boot/System.map-$(uname -r) | --- | --- | [success] |
-| /boot/vmlinuz | --- | --- | [success] |
+| AVML (RAM) | --- | --- | ✓ |
+| LiME | ✗ | ✗ | ✗ |
+| /boot/System.map-$(uname -r) | --- | --- | ✓ |
+| /boot/vmlinuz | --- | --- | ✓ |
 
 ### Antivirus
 
 | Command / File | Json | Text | Raw |
 |---|---|---|---|
-| ClamAV | [success] | --- | --- |
+| ClamAV | ✓ | --- | --- |
 
 ---
 
