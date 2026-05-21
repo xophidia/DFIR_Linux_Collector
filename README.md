@@ -80,7 +80,7 @@ Defined in `rules.json` — no code modification required.
 
 | Distribution | Version | OK | Error | Comments |
 |---|---|---|---|---|
-| Ubuntu | 12 - 20 | ✓ | --- | --- |
+| Ubuntu | 12 - 25 | ✓ | --- | --- |
 | Debian | 13 (Trixie) | ✓ | --- | --- |
 | Fedora | 30 | ✓ | --- | --- |
 | CentOS | 7 | ✓ | --- | --- |
