@@ -254,9 +254,3 @@ Uncompressing orc  100%
 ## License
 
 GNU Lesser General Public License
-
-## Contributors
-
-:godmode: xophidia https://github.com/xophidia  
-:godmode: Dupss https://github.com/dupss  
-:godmode: leludo84 https://github.com/leludo84
