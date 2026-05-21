@@ -93,7 +93,7 @@ Other distributions not yet tested, still in progress ...
 ## Bundled components versions
 
 | Component | Version |
-|---|---|---|
+|---|---|
 | Alpine Linux | **v3.23.4** (Apr 2026) |
 | busybox | **1.37.0** (static) |
 | apk-tools-static | **3.0.6-r0** |
