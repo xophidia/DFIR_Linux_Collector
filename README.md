@@ -15,7 +15,7 @@ Stand-alone collecting tools for GNU/Linux
 
 ```
 DFIR_Linux_Collector/
-├── dlc.sh              → Generic engine (~290 lines)
+├── dlc.sh              → Generic engine 
 ├── rules.json          → Collection rules (YAML-like JSON)
 ├── scripts/            → External scripts (firefox, chrome, ssh, zeitgeist, etc.)
 ├── tools/              → Bundled binaries (avml, sqlite3)
@@ -81,7 +81,6 @@ Defined in `rules.json` — no code modification required.
 | Distribution | Version | OK | Error | Comments |
 |---|---|---|---|---|
 | Ubuntu | 12 - 20 | ✓ | --- | --- |
-| Debian | > 8 | ✓ | --- | --- |
 | Debian | 13 (Trixie) | ✓ | --- | --- |
 | Fedora | 30 | ✓ | --- | --- |
 | CentOS | 7 | ✓ | --- | --- |
@@ -99,7 +98,6 @@ Other distributions not yet tested, still in progress ...
 | busybox | **1.37.0** (static) |
 | apk-tools-static | **3.0.6-r0** |
 | jq | **1.8.1-r0** |
-| patchelf | **0.18.0-r0** |
 
 ---
 
